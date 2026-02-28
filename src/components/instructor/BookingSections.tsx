@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { BookingRequestsSection } from "./BookingRequestsSection";
 
-export function BookingSections() {
+export function BookingSections({ onBookingAccepted }: { onBookingAccepted?: () => void }) {
   const t = useTranslations("user.instructor");
   const [refetchKey, setRefetchKey] = useState(0);
 
@@ -14,7 +14,10 @@ export function BookingSections() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status: "accepted" }),
     });
-    if (res.ok) setRefetchKey((k) => k + 1);
+    if (res.ok) {
+      setRefetchKey((k) => k + 1);
+      onBookingAccepted?.();
+    }
   }
 
   async function declineRequest(id: string) {

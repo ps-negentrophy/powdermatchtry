@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { InstructorProfileSection } from "@/components/instructor/InstructorProfileSection";
@@ -10,11 +11,11 @@ interface InstructorDashboardProps {
   displayName: string;
 }
 
-export function InstructorDashboard({
-  email,
-  displayName,
-}: InstructorDashboardProps) {
+export function InstructorDashboard({ email, displayName }: InstructorDashboardProps) {
   const t = useTranslations("user.instructor");
+
+  // Incremented whenever a booking is accepted so InstructorProfileSection re-fetches slots
+  const [slotsVersion, setSlotsVersion] = useState(0);
 
   return (
     <div className="max-w-4xl mx-auto py-12 space-y-8">
@@ -30,8 +31,11 @@ export function InstructorDashboard({
           {t("backHome")}
         </Link>
       </div>
-      <InstructorProfileSection />
-      <BookingSections />
+
+      {/* reloadTrigger changes when a booking is accepted, causing the slots to re-fetch */}
+      <InstructorProfileSection reloadTrigger={slotsVersion} />
+
+      <BookingSections onBookingAccepted={() => setSlotsVersion((v) => v + 1)} />
     </div>
   );
 }

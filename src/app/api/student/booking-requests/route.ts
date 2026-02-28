@@ -3,9 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function GET(request: NextRequest) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const status = request.nextUrl.searchParams.get("status");
@@ -13,7 +11,7 @@ export async function GET(request: NextRequest) {
   let query = supabase
     .from("booking_requests")
     .select(
-      "id, instructor_id, requested_date, requested_time_slot, message, status, created_at, responded_at, completed_at, instructors(display_name)"
+      "id, instructor_id, requested_date, end_date, message, status, created_at, responded_at, completed_at, instructors(display_name)"
     )
     .eq("student_id", user.id)
     .order("created_at", { ascending: false });
@@ -29,8 +27,8 @@ export async function GET(request: NextRequest) {
       id: b.id,
       instructor_id: b.instructor_id,
       instructor_name: instructorData?.display_name ?? "Instructor",
-      requested_date: b.requested_date,
-      requested_time_slot: b.requested_time_slot,
+      start_date: b.requested_date,
+      end_date: b.end_date ?? b.requested_date,
       message: b.message,
       status: b.status,
       created_at: b.created_at,
@@ -44,22 +42,28 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const body = await request.json();
-  const { instructor_id, requested_date, requested_time_slot, message } = body as {
+  const { instructor_id, start_date, end_date, message, availability_slot_id } = body as {
     instructor_id: string;
-    requested_date: string;
-    requested_time_slot?: string;
+    start_date: string;
+    end_date: string;
     message?: string;
+    availability_slot_id?: string;
   };
 
-  if (!instructor_id || !requested_date) {
+  if (!instructor_id || !start_date || !end_date) {
     return NextResponse.json(
-      { error: "instructor_id and requested_date are required" },
+      { error: "instructor_id, start_date and end_date are required" },
+      { status: 400 }
+    );
+  }
+
+  if (end_date < start_date) {
+    return NextResponse.json(
+      { error: "end_date must be on or after start_date" },
       { status: 400 }
     );
   }
@@ -69,9 +73,10 @@ export async function POST(request: NextRequest) {
     .insert({
       student_id: user.id,
       instructor_id,
-      requested_date,
-      requested_time_slot: requested_time_slot ?? null,
+      requested_date: start_date,
+      end_date,
       message: message ?? null,
+      availability_slot_id: availability_slot_id ?? null,
     })
     .select()
     .single();

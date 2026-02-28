@@ -23,6 +23,7 @@ const MOCK_INSTRUCTORS: InstructorWithRelations[] = [
     skill_levels: [DEFAULT_SKILL_LEVELS[0], DEFAULT_SKILL_LEVELS[1]],
     improvement_areas: [DEFAULT_IMPROVEMENT_AREAS[1], DEFAULT_IMPROVEMENT_AREAS[3]],
     disciplines: [DEFAULT_DISCIPLINES[0], DEFAULT_DISCIPLINES[1]],
+    availability_slots: [],
   },
   {
     id: "2",
@@ -38,6 +39,7 @@ const MOCK_INSTRUCTORS: InstructorWithRelations[] = [
     skill_levels: [DEFAULT_SKILL_LEVELS[0], DEFAULT_SKILL_LEVELS[1]],
     improvement_areas: [DEFAULT_IMPROVEMENT_AREAS[3]],
     disciplines: [DEFAULT_DISCIPLINES[0]],
+    availability_slots: [],
   },
 ];
 
@@ -116,6 +118,8 @@ export default function FindInstructorPage() {
   const [loading, setLoading] = useState(true);
   const [useMockData, setUseMockData] = useState(false);
   const [filters, setFilters] = useState<InstructorFiltersState>({
+    startDate: undefined,
+    endDate: undefined,
     resortIds: [],
     resortOperator: "or",
     languageIds: [],
@@ -158,6 +162,8 @@ export default function FindInstructorPage() {
       setLoading(true);
       try {
         const params = new URLSearchParams();
+        if (filters.startDate) params.set("startDate", filters.startDate);
+        if (filters.endDate) params.set("endDate", filters.endDate);
         if (filters.resortIds.length) {
           params.set("resortIds", filters.resortIds.join(","));
           params.set("resortOperator", filters.resortOperator);
@@ -218,7 +224,12 @@ export default function FindInstructorPage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {displayedInstructors.map((instructor) => (
-              <InstructorCard key={instructor.id} instructor={instructor} />
+              <InstructorCard
+                key={instructor.id}
+                instructor={instructor}
+                defaultStartDate={filters.startDate}
+                defaultEndDate={filters.endDate}
+              />
             ))}
           </div>
         )}

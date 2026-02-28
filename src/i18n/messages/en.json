@@ -40,6 +40,10 @@
     "matchLabel": "Match:",
     "andAll": "AND (all)",
     "orAny": "OR (any)",
+    "travelDates": "Travel dates",
+    "fromDate": "From",
+    "toDate": "To",
+    "clearDates": "Clear dates",
     "apply": "Apply Filters",
     "clear": "Clear"
   },
@@ -95,6 +99,43 @@
       "error": "Failed to update password."
     }
   },
+  "signup": {
+    "chooseRole": "How will you use Powder Match?",
+    "studentCard": "I'm a Student",
+    "studentCardDesc": "Find certified instructors and book ski or snowboard lessons.",
+    "instructorCard": "I'm an Instructor",
+    "instructorCardDesc": "Set your availability and connect with students who need lessons.",
+    "changeRole": "← Change",
+    "creatingAs": "Creating a",
+    "studentLabel": "Student Account",
+    "instructorLabel": "Instructor Account",
+    "displayName": "Your name",
+    "email": "Email",
+    "password": "Password",
+    "passwordHint": "Minimum 6 characters",
+    "submit": "Create Account",
+    "hasAccount": "Already have an account?",
+    "loginStudent": "Student login",
+    "loginInstructor": "Instructor login",
+    "success": "Account created! Check your email to confirm, then log in.",
+    "error": "Something went wrong. Please try again."
+  },
+  "booking": {
+    "title": "Book a lesson with",
+    "datesLabel": "Requested dates",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "messageLabel": "Message (optional)",
+    "messagePlaceholder": "Tell the instructor about your goals, skill level, or any questions.",
+    "submit": "Send Request",
+    "cancel": "Cancel",
+    "success": "Request sent! You can track it in your student dashboard.",
+    "checking": "Checking your account...",
+    "loginRequired": "You need to be logged in as a student to book.",
+    "loginLink": "Log in here",
+    "studentRequired": "Only student accounts can send booking requests.",
+    "error": "Failed to send request. Please try again."
+  },
   "user": {
     "welcome": "Welcome",
     "role": "Role",
@@ -134,14 +175,23 @@
       "acceptedBookings": "Accepted Bookings",
       "completedBookings": "Completed Bookings (History)",
       "profile": {
-        "title": "Instructor Profile",
-        "availability": "Available dates to teach",
-        "conditions": "Conditions you can meet",
+        "title": "Teaching Schedule",
+        "subtitle": "Add availability blocks — each one covers a date range and specifies what you can teach on those dates.",
+        "addAvailability": "New availability",
+        "dateRange": "Date range",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "whatITeach": "What I can teach on these dates",
+        "saveSlot": "Save availability",
+        "saveError": "Failed to save. Please try again.",
+        "savedSlots": "Your availabilities",
+        "noSlots": "No availabilities saved yet.",
+        "noConditions": "No conditions specified.",
+        "deleteSlot": "Delete",
         "loading": "Loading...",
-        "addDate": "Add date",
-        "removeDate": "Remove date",
-        "saveConditions": "Save conditions",
-        "saved": "Saved."
+        "loadingOptions": "Loading options...",
+        "seedWarningTitle": "Reference data not set up yet.",
+        "seedWarningBody": "The options shown (Ski, Kiroro, etc.) are placeholders and cannot be saved. Please run the seed SQL in your Supabase SQL Editor to set up real data, then reload this page."
       }
     }
   }

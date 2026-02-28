@@ -40,6 +40,10 @@
     "matchLabel": "マッチ：",
     "andAll": "かつ（すべて）",
     "orAny": "または（いずれか）",
+    "travelDates": "旅行日程",
+    "fromDate": "開始",
+    "toDate": "終了",
+    "clearDates": "日程をクリア",
     "apply": "検索",
     "clear": "クリア"
   },
@@ -95,6 +99,43 @@
       "error": "パスワードの更新に失敗しました。"
     }
   },
+  "signup": {
+    "chooseRole": "Powder Match をどのようにご利用ですか？",
+    "studentCard": "生徒として利用する",
+    "studentCardDesc": "認定インストラクターを探してスキー・スノボのレッスンを予約。",
+    "instructorCard": "インストラクターとして利用する",
+    "instructorCardDesc": "空き枠を設定して、レッスンを希望する生徒とつながる。",
+    "changeRole": "← 変更",
+    "creatingAs": "作成するアカウント：",
+    "studentLabel": "生徒アカウント",
+    "instructorLabel": "インストラクターアカウント",
+    "displayName": "お名前",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "passwordHint": "6文字以上",
+    "submit": "アカウントを作成",
+    "hasAccount": "すでにアカウントをお持ちですか？",
+    "loginStudent": "生徒ログイン",
+    "loginInstructor": "インストラクターログイン",
+    "success": "アカウントを作成しました！確認メールをご確認ください。",
+    "error": "エラーが発生しました。もう一度お試しください。"
+  },
+  "booking": {
+    "title": "レッスン予約：",
+    "datesLabel": "希望日程",
+    "startDate": "開始日",
+    "endDate": "終了日",
+    "messageLabel": "メッセージ（任意）",
+    "messagePlaceholder": "目標やスキルレベル、ご質問などをお伝えください。",
+    "submit": "リクエストを送る",
+    "cancel": "キャンセル",
+    "success": "リクエストを送信しました！生徒ダッシュボードで確認できます。",
+    "checking": "アカウントを確認中...",
+    "loginRequired": "予約には生徒アカウントでのログインが必要です。",
+    "loginLink": "こちらからログイン",
+    "studentRequired": "生徒アカウントのみ予約リクエストを送ることができます。",
+    "error": "送信に失敗しました。もう一度お試しください。"
+  },
   "user": {
     "welcome": "ようこそ",
     "role": "役割",
@@ -134,14 +175,23 @@
       "acceptedBookings": "承認済み予約",
       "completedBookings": "完了済み予約（履歴）",
       "profile": {
-        "title": "インストラクタープロフィール",
-        "availability": "教えられる日付",
-        "conditions": "対応できる条件",
+        "title": "レッスンスケジュール",
+        "subtitle": "空き期間ごとに、対応可能な日程と内容を登録してください。複数追加できます。",
+        "addAvailability": "空き枠を追加",
+        "dateRange": "日程",
+        "startDate": "開始日",
+        "endDate": "終了日",
+        "whatITeach": "この期間に対応できる内容",
+        "saveSlot": "この空き枠を保存",
+        "saveError": "保存に失敗しました。もう一度お試しください。",
+        "savedSlots": "登録済みの空き枠",
+        "noSlots": "まだ空き枠が登録されていません。",
+        "noConditions": "条件が指定されていません。",
+        "deleteSlot": "削除",
         "loading": "読み込み中...",
-        "addDate": "日付を追加",
-        "removeDate": "削除",
-        "saveConditions": "条件を保存",
-        "saved": "保存しました。"
+        "loadingOptions": "オプションを読み込み中...",
+        "seedWarningTitle": "参照データがまだ設定されていません。",
+        "seedWarningBody": "表示されているオプション（スキー、キロロなど）はプレースホルダーであり、保存できません。Supabase SQL Editorでシード SQLを実行してから、このページを再読み込みしてください。"
       }
     }
   }

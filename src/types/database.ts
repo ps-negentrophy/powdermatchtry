@@ -65,12 +65,31 @@ export interface Instructor {
   is_active: boolean;
 }
 
+export interface ResolvedNameItem {
+  id: string;
+  name_en: string;
+  name_zh: string | null;
+  name_ja: string | null;
+}
+
+export interface ResolvedAvailabilitySlot {
+  id: string;
+  start_date: string;
+  end_date: string;
+  resolved_disciplines: ResolvedNameItem[];
+  resolved_resorts: ResolvedNameItem[];
+  resolved_languages: ResolvedNameItem[];
+  resolved_skill_level: ResolvedNameItem | null;
+  resolved_improvement_areas: ResolvedNameItem[];
+}
+
 export interface InstructorWithRelations extends Instructor {
   resorts: Resort[];
   languages: Language[];
   skill_levels: SkillLevel[];
   improvement_areas: ImprovementArea[];
   disciplines: Discipline[];
+  availability_slots: ResolvedAvailabilitySlot[];
 }
 
 export interface MatchFilters {

@@ -62,18 +62,24 @@ export function AuthSection() {
   }
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3">
       <Link
         href="/login/student"
-        className="text-slate-600 hover:text-slate-900 transition-colors text-base"
+        className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
       >
         {t("studentLogin")}
       </Link>
       <Link
         href="/login/instructor"
-        className="text-slate-600 hover:text-slate-900 transition-colors text-base"
+        className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
       >
         {t("instructorLogin")}
+      </Link>
+      <Link
+        href="/signup"
+        className="rounded-lg bg-powder-500 px-4 py-1.5 text-sm font-semibold text-white hover:bg-powder-600 transition-colors"
+      >
+        {t("signUp")}
       </Link>
     </div>
   );

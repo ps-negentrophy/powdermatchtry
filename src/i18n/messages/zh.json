@@ -40,6 +40,10 @@
     "matchLabel": "匹配：",
     "andAll": "且（全部）",
     "orAny": "或（任一）",
+    "travelDates": "出行日期",
+    "fromDate": "从",
+    "toDate": "至",
+    "clearDates": "清除日期",
     "apply": "应用筛选",
     "clear": "清除"
   },
@@ -95,6 +99,43 @@
       "error": "更新密码失败。"
     }
   },
+  "signup": {
+    "chooseRole": "您将如何使用 Powder Match？",
+    "studentCard": "我是学员",
+    "studentCardDesc": "查找认证教练并预订滑雪或单板课程。",
+    "instructorCard": "我是教练",
+    "instructorCardDesc": "设置您的空闲时间，与需要课程的学员建立联系。",
+    "changeRole": "← 更改",
+    "creatingAs": "正在创建",
+    "studentLabel": "学员账户",
+    "instructorLabel": "教练账户",
+    "displayName": "您的姓名",
+    "email": "邮箱",
+    "password": "密码",
+    "passwordHint": "至少6个字符",
+    "submit": "创建账户",
+    "hasAccount": "已有账户？",
+    "loginStudent": "学员登录",
+    "loginInstructor": "教练登录",
+    "success": "账户已创建！请查收邮件进行确认，然后登录。",
+    "error": "出了点问题，请重试。"
+  },
+  "booking": {
+    "title": "预约课程：",
+    "datesLabel": "申请日期",
+    "startDate": "开始日期",
+    "endDate": "结束日期",
+    "messageLabel": "留言（可选）",
+    "messagePlaceholder": "告诉教练您的目标、技能水平或任何问题。",
+    "submit": "发送申请",
+    "cancel": "取消",
+    "success": "申请已发送！您可在学员仪表盘中查看进度。",
+    "checking": "正在验证账户...",
+    "loginRequired": "您需要以学员身份登录才能预约。",
+    "loginLink": "点击登录",
+    "studentRequired": "只有学员账户才能发送预约申请。",
+    "error": "发送失败，请重试。"
+  },
   "user": {
     "welcome": "欢迎",
     "role": "身份",
@@ -134,14 +175,23 @@
       "acceptedBookings": "已接受的预订",
       "completedBookings": "已完成预订（历史记录）",
       "profile": {
-        "title": "教练档案",
-        "availability": "可授课日期",
-        "conditions": "您能满足的条件",
+        "title": "授课安排",
+        "subtitle": "按时间段添加您的空闲安排，每段包含日期范围和该期间能教的内容，可添加多段。",
+        "addAvailability": "添加空闲时段",
+        "dateRange": "日期范围",
+        "startDate": "开始日期",
+        "endDate": "结束日期",
+        "whatITeach": "这段时间我能教的内容",
+        "saveSlot": "保存此时段",
+        "saveError": "保存失败，请重试。",
+        "savedSlots": "已保存的空闲时段",
+        "noSlots": "尚未添加任何空闲时段。",
+        "noConditions": "未指定条件。",
+        "deleteSlot": "删除",
         "loading": "加载中...",
-        "addDate": "添加日期",
-        "removeDate": "移除",
-        "saveConditions": "保存条件",
-        "saved": "已保存。"
+        "loadingOptions": "正在加载选项...",
+        "seedWarningTitle": "参考数据尚未配置。",
+        "seedWarningBody": "当前显示的选项（如滑雪、喜乐乐等）为占位数据，无法保存。请在 Supabase SQL 编辑器中运行种子 SQL，然后刷新此页面。"
       }
     }
   }
