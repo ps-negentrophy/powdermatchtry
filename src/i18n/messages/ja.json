@@ -107,7 +107,19 @@
       "welcome": "ようこそ",
       "findInstructor": "インストラクターを探す",
       "backHome": "ホームに戻る",
-      "placeholder": "生徒ダッシュボード – 近日公開。"
+      "placeholder": "生徒ダッシュボード – 近日公開。",
+      "myBookings": "予約一覧",
+      "noBookings": "予約がありません。",
+      "loading": "読み込み中...",
+      "pendingBookings": "申請中",
+      "acceptedBookings": "予定レッスン",
+      "completedBookings": "過去のレッスン",
+      "status": {
+        "pending": "申請中",
+        "accepted": "承認済み",
+        "declined": "辞退",
+        "completed": "完了"
+      }
     },
     "instructor": {
       "welcome": "ようこそ",

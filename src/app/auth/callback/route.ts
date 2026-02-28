@@ -34,6 +34,19 @@ export async function GET(request: Request) {
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error) {
+      // If no explicit next destination, route by role to the correct dashboard
+      if (next === "/") {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile } = await supabase
+            .from("profiles")
+            .select("role")
+            .eq("id", user.id)
+            .single();
+          const role = profile?.role ?? "student";
+          return NextResponse.redirect(`${origin}/en/user/${role}`);
+        }
+      }
       return NextResponse.redirect(`${origin}${next}`);
     }
   }

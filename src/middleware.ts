@@ -31,7 +31,9 @@ export default async function middleware(request: NextRequest) {
 
     if (!session) {
       const locale = pathname.split("/")[1] ?? "en";
-      return NextResponse.redirect(new URL(`/${locale}/login/student`, request.url));
+      const isInstructorPath = /^\/(en|zh|ja)\/user\/instructor(?:\/|$)/.test(pathname);
+      const loginPath = isInstructorPath ? `/${locale}/login/instructor` : `/${locale}/login/student`;
+      return NextResponse.redirect(new URL(loginPath, request.url));
     }
   }
 

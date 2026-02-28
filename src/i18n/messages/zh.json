@@ -107,7 +107,19 @@
       "welcome": "欢迎",
       "findInstructor": "查找教练",
       "backHome": "返回首页",
-      "placeholder": "学员仪表盘 – 更多功能即将上线。"
+      "placeholder": "学员仪表盘 – 更多功能即将上线。",
+      "myBookings": "我的预订",
+      "noBookings": "暂无预订。",
+      "loading": "加载中...",
+      "pendingBookings": "待处理请求",
+      "acceptedBookings": "即将到来的课程",
+      "completedBookings": "历史课程",
+      "status": {
+        "pending": "待处理",
+        "accepted": "已接受",
+        "declined": "已拒绝",
+        "completed": "已完成"
+      }
     },
     "instructor": {
       "welcome": "欢迎",

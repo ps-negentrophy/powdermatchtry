@@ -21,7 +21,7 @@ export default async function InstructorUserPage({
     .single();
 
   if (profile?.role !== "instructor") {
-    redirect(`/${locale}/user`);
+    redirect(`/${locale}/user/student`);
   }
 
   const displayName =
