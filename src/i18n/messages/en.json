@@ -1,0 +1,136 @@
+{
+  "common": {
+    "language": "Language",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Something went wrong"
+  },
+  "nav": {
+    "home": "Home",
+    "findInstructor": "Find Instructor",
+    "forInstructors": "For Instructors",
+    "resorts": "Resorts",
+    "contact": "Contact"
+  },
+  "home": {
+    "hero": {
+      "title": "Find Your Perfect Ski & Snowboard Instructor",
+      "subtitle": "Connect with certified instructors across Niseko, Rusutsu & Kiroro. Match by language, skill level, and areas to improve.",
+      "cta": "Find an Instructor"
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "step1": "Choose your preferences: teaching language, skill level, and areas to improve",
+      "step2": "Browse instructor profiles that match your needs",
+      "step3": "Book a lesson and hit the slopes"
+    }
+  },
+  "filters": {
+    "title": "Filter Instructors",
+    "discipline": "Ski / Snowboard",
+    "resort": "Resort",
+    "language": "Teaching Language",
+    "skillLevel": "Skill Level",
+    "areaToImprove": "Area to Improve",
+    "allResorts": "All resorts",
+    "anyLanguage": "Any language",
+    "anyLevel": "Any level",
+    "anyArea": "Any area",
+    "any": "Any",
+    "matchLabel": "Match:",
+    "andAll": "AND (all)",
+    "orAny": "OR (any)",
+    "apply": "Apply Filters",
+    "clear": "Clear"
+  },
+  "skillLevels": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "expert": "Expert"
+  },
+  "resorts": {
+    "niseko": "Niseko",
+    "rusutsu": "Rusutsu",
+    "kiroro": "Kiroro"
+  },
+  "auth": {
+    "studentLogin": "Student Login",
+    "instructorLogin": "Instructor Login",
+    "email": "Email",
+    "password": "Password",
+    "login": "Log in",
+    "signUp": "Sign up",
+    "loginTitle": "Log in as Student",
+    "loginTitleInstructor": "Log in as Instructor",
+    "signUpTitle": "Create student account",
+    "signUpTitleInstructor": "Create instructor account",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "logout": "Log out",
+    "myPage": "My Page",
+    "authError": "Invalid email or password",
+    "signUpSuccess": "Account created. Please check your email to confirm.",
+    "displayName": "Display name",
+    "forgotPassword": "Forgot password?",
+    "wrongLoginTypeStudent": "This account is for instructors. Please use Instructor Login.",
+    "wrongLoginTypeInstructor": "This account is for students. Please use Student Login.",
+    "forgotPasswordPage": {
+      "title": "Reset your password",
+      "emailLabel": "Email",
+      "emailPlaceholder": "Enter your email address",
+      "submit": "Send reset link",
+      "success": "Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.",
+      "backToLogin": "Back to login",
+      "error": "Something went wrong. Please try again."
+    },
+    "resetPassword": {
+      "title": "Set new password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm password",
+      "submit": "Update password",
+      "success": "Your password has been updated. Redirecting to your account...",
+      "passwordMismatch": "Passwords do not match.",
+      "passwordTooShort": "Password must be at least 6 characters.",
+      "error": "Failed to update password."
+    }
+  },
+  "user": {
+    "welcome": "Welcome",
+    "role": "Role",
+    "role_student": "Student",
+    "role_instructor": "Instructor",
+    "findInstructor": "Find an Instructor",
+    "backHome": "Back to Home",
+    "placeholder": "This page will be tailored with more features later.",
+    "student": {
+      "welcome": "Welcome",
+      "findInstructor": "Find an Instructor",
+      "backHome": "Back to Home",
+      "placeholder": "Student dashboard – more features coming soon."
+    },
+    "instructor": {
+      "welcome": "Welcome",
+      "backHome": "Back to Home",
+      "placeholder": "Instructor dashboard – more features coming soon.",
+      "loading": "Loading...",
+      "noBookings": "No bookings.",
+      "accept": "Accept",
+      "decline": "Decline",
+      "markComplete": "Mark Complete",
+      "pendingRequests": "Booking Requests (Pending)",
+      "acceptedBookings": "Accepted Bookings",
+      "completedBookings": "Completed Bookings (History)",
+      "profile": {
+        "title": "Instructor Profile",
+        "availability": "Available dates to teach",
+        "conditions": "Conditions you can meet",
+        "loading": "Loading...",
+        "addDate": "Add date",
+        "removeDate": "Remove date",
+        "saveConditions": "Save conditions",
+        "saved": "Saved."
+      }
+    }
+  }
+}

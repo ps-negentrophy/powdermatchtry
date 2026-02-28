@@ -1,0 +1,136 @@
+{
+  "common": {
+    "language": "言語",
+    "search": "検索",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました"
+  },
+  "nav": {
+    "home": "ホーム",
+    "findInstructor": "インストラクターを探す",
+    "forInstructors": "インストラクター向け",
+    "resorts": "スキー場",
+    "contact": "お問い合わせ"
+  },
+  "home": {
+    "hero": {
+      "title": "あなたにぴったりのスキー・スノボインストラクター",
+      "subtitle": "ニセコ、ルスツ、キロロの認定インストラクターとつながる。指導言語・スキルレベル・上達したい分野でマッチング。",
+      "cta": "インストラクターを探す"
+    },
+    "howItWorks": {
+      "title": "ご利用の流れ",
+      "step1": "指導言語・スキルレベル・上達したい分野を選択",
+      "step2": "条件に合うインストラクターのプロフィールを閲覧",
+      "step3": "レッスンを予約して雪山へ"
+    }
+  },
+  "filters": {
+    "title": "インストラクターを絞り込む",
+    "discipline": "スキー / スノボ",
+    "resort": "スキー場",
+    "language": "指導言語",
+    "skillLevel": "スキルレベル",
+    "areaToImprove": "上達したい分野",
+    "allResorts": "すべてのスキー場",
+    "anyLanguage": "どれでも",
+    "anyLevel": "どれでも",
+    "anyArea": "どれでも",
+    "any": "どれでも",
+    "matchLabel": "マッチ：",
+    "andAll": "かつ（すべて）",
+    "orAny": "または（いずれか）",
+    "apply": "検索",
+    "clear": "クリア"
+  },
+  "skillLevels": {
+    "beginner": "初級",
+    "intermediate": "中級",
+    "advanced": "上級",
+    "expert": "エキスパート"
+  },
+  "resorts": {
+    "niseko": "ニセコ",
+    "rusutsu": "ルスツ",
+    "kiroro": "キロロ"
+  },
+  "auth": {
+    "studentLogin": "生徒ログイン",
+    "instructorLogin": "インストラクターログイン",
+    "email": "メールアドレス",
+    "password": "パスワード",
+    "login": "ログイン",
+    "signUp": "新規登録",
+    "loginTitle": "生徒としてログイン",
+    "loginTitleInstructor": "インストラクターとしてログイン",
+    "signUpTitle": "生徒アカウント作成",
+    "signUpTitleInstructor": "インストラクターアカウント作成",
+    "noAccount": "アカウントをお持ちでない方",
+    "hasAccount": "すでにアカウントをお持ちの方",
+    "logout": "ログアウト",
+    "myPage": "マイページ",
+    "authError": "メールアドレスまたはパスワードが正しくありません",
+    "signUpSuccess": "アカウントを作成しました。確認メールをご確認ください。",
+    "displayName": "表示名",
+    "forgotPassword": "パスワードをお忘れですか？",
+    "wrongLoginTypeInstructor": "このアカウントは生徒用です。生徒ログインをご利用ください。",
+    "wrongLoginTypeStudent": "このアカウントはインストラクター用です。インストラクターログインをご利用ください。",
+    "forgotPasswordPage": {
+      "title": "パスワードをリセット",
+      "emailLabel": "メールアドレス",
+      "emailPlaceholder": "メールアドレスを入力してください",
+      "submit": "リセットリンクを送信",
+      "success": "パスワードリセット用のリンクをメールで送信しました。届かない場合は迷惑メールフォルダをご確認ください。",
+      "backToLogin": "ログインに戻る",
+      "error": "エラーが発生しました。もう一度お試しください。"
+    },
+    "resetPassword": {
+      "title": "新しいパスワードを設定",
+      "newPassword": "新しいパスワード",
+      "confirmPassword": "パスワード（確認）",
+      "submit": "パスワードを更新",
+      "success": "パスワードを更新しました。アカウントページに移動します...",
+      "passwordMismatch": "パスワードが一致しません。",
+      "passwordTooShort": "パスワードは6文字以上で入力してください。",
+      "error": "パスワードの更新に失敗しました。"
+    }
+  },
+  "user": {
+    "welcome": "ようこそ",
+    "role": "役割",
+    "role_student": "生徒",
+    "role_instructor": "インストラクター",
+    "findInstructor": "インストラクターを探す",
+    "backHome": "ホームに戻る",
+    "placeholder": "このページには今後さらに機能を追加します。",
+    "student": {
+      "welcome": "ようこそ",
+      "findInstructor": "インストラクターを探す",
+      "backHome": "ホームに戻る",
+      "placeholder": "生徒ダッシュボード – 近日公開。"
+    },
+    "instructor": {
+      "welcome": "ようこそ",
+      "backHome": "ホームに戻る",
+      "placeholder": "インストラクターダッシュボード – 近日公開。",
+      "loading": "読み込み中...",
+      "noBookings": "予約がありません。",
+      "accept": "受け付ける",
+      "decline": "辞退",
+      "markComplete": "完了にする",
+      "pendingRequests": "予約リクエスト（未承認）",
+      "acceptedBookings": "承認済み予約",
+      "completedBookings": "完了済み予約（履歴）",
+      "profile": {
+        "title": "インストラクタープロフィール",
+        "availability": "教えられる日付",
+        "conditions": "対応できる条件",
+        "loading": "読み込み中...",
+        "addDate": "日付を追加",
+        "removeDate": "削除",
+        "saveConditions": "条件を保存",
+        "saved": "保存しました。"
+      }
+    }
+  }
+}
