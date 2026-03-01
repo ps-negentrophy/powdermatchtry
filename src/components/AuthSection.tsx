@@ -43,13 +43,17 @@ export function AuthSection() {
   if (loading) return null;
 
   if (supabase && user) {
+    const role = (user.user_metadata?.role as string | undefined) ?? "student";
+    const myPageLabel = role === "instructor" ? t("myPageInstructor") : t("myPageStudent");
+    const myPageHref = role === "instructor" ? "/user/instructor" : "/user/student";
+
     return (
       <div className="flex items-center gap-4">
         <Link
-          href="/user"
+          href={myPageHref}
           className="text-slate-600 hover:text-slate-900 transition-colors text-base"
         >
-          {t("myPage")}
+          {myPageLabel}
         </Link>
         <button
           onClick={handleLogout}

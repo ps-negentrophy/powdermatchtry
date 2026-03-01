@@ -21,7 +21,7 @@ export async function GET() {
 
   const { data: slots, error } = await supabase
     .from("availability_slots")
-    .select("id, start_date, end_date, discipline_ids, resort_ids, language_ids, skill_level_id, improvement_area_ids, created_at")
+    .select("id, start_date, end_date, discipline_ids, resort_ids, language_ids, skill_level_ids, improvement_area_ids, created_at")
     .eq("instructor_id", instructorId)
     .order("start_date", { ascending: true });
 
@@ -32,7 +32,7 @@ export async function GET() {
   const disciplineIds = [...new Set(slots.flatMap((s) => s.discipline_ids ?? []))];
   const resortIds = [...new Set(slots.flatMap((s) => s.resort_ids ?? []))];
   const languageIds = [...new Set(slots.flatMap((s) => s.language_ids ?? []))];
-  const skillLevelIds = [...new Set(slots.map((s) => s.skill_level_id).filter((id): id is string => !!id))];
+  const skillLevelIds = [...new Set(slots.flatMap((s) => s.skill_level_ids ?? []))];
   const improvementAreaIds = [...new Set(slots.flatMap((s) => s.improvement_area_ids ?? []))];
 
   // Fetch names in parallel (skip empty sets)
@@ -56,7 +56,7 @@ export async function GET() {
     resolved_disciplines: (slot.discipline_ids ?? []).map((id) => disciplineMap.get(id)).filter(Boolean),
     resolved_resorts: (slot.resort_ids ?? []).map((id) => resortMap.get(id)).filter(Boolean),
     resolved_languages: (slot.language_ids ?? []).map((id) => languageMap.get(id)).filter(Boolean),
-    resolved_skill_level: slot.skill_level_id ? (skillLevelMap.get(slot.skill_level_id) ?? null) : null,
+    resolved_skill_levels: (slot.skill_level_ids ?? []).map((id) => skillLevelMap.get(id)).filter(Boolean),
     resolved_improvement_areas: (slot.improvement_area_ids ?? []).map((id) => improvementAreaMap.get(id)).filter(Boolean),
   }));
 
@@ -86,11 +86,11 @@ export async function POST(request: NextRequest) {
     discipline_ids: string[];
     resort_ids: string[];
     language_ids: string[];
-    skill_level_id?: string;
+    skill_level_ids?: string[];
     improvement_area_ids: string[];
   };
 
-  const { start_date, end_date, discipline_ids, resort_ids, language_ids, skill_level_id, improvement_area_ids } = body;
+  const { start_date, end_date, discipline_ids, resort_ids, language_ids, skill_level_ids, improvement_area_ids } = body;
 
   if (!start_date || !end_date) {
     return NextResponse.json({ error: "start_date and end_date are required" }, { status: 400 });
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
       discipline_ids: filterUUIDs(discipline_ids),
       resort_ids: filterUUIDs(resort_ids),
       language_ids: filterUUIDs(language_ids),
-      skill_level_id: validUUIDOrNull(skill_level_id),
+      skill_level_ids: filterUUIDs(skill_level_ids),
       improvement_area_ids: filterUUIDs(improvement_area_ids),
     })
     .select()

@@ -1,14 +1,16 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import type { ResolvedNameItem } from "@/types/database";
+import { SlotTagsDisplay } from "@/components/SlotTagsDisplay";
+import { createClient } from "@/lib/supabase/client";
 
 interface SlotConditions {
   disciplines: ResolvedNameItem[];
   resorts: ResolvedNameItem[];
   languages: ResolvedNameItem[];
-  skill_level: ResolvedNameItem | null;
+  skill_levels: ResolvedNameItem[];
   improvement_areas: ResolvedNameItem[];
 }
 
@@ -36,14 +38,19 @@ function getLocalizedName(
   return item.name_en;
 }
 
-function conditionTags(conditions: SlotConditions, locale: string): string[] {
-  const tags: string[] = [];
-  tags.push(...conditions.disciplines.map((i) => getLocalizedName(i, locale)));
-  tags.push(...conditions.resorts.map((i) => getLocalizedName(i, locale)));
-  tags.push(...conditions.languages.map((i) => getLocalizedName(i, locale)));
-  if (conditions.skill_level) tags.push(getLocalizedName(conditions.skill_level, locale));
-  tags.push(...conditions.improvement_areas.map((i) => getLocalizedName(i, locale)));
-  return tags;
+function conditionPrimaryTags(conditions: SlotConditions, locale: string): string[] {
+  return [
+    ...conditions.disciplines.map((i) => getLocalizedName(i, locale)),
+    ...conditions.resorts.map((i) => getLocalizedName(i, locale)),
+    ...conditions.languages.map((i) => getLocalizedName(i, locale)),
+  ];
+}
+
+function conditionExpandedTags(conditions: SlotConditions, locale: string): string[] {
+  return [
+    ...conditions.skill_levels.map((i) => getLocalizedName(i, locale)),
+    ...conditions.improvement_areas.map((i) => getLocalizedName(i, locale)),
+  ];
 }
 
 export function BookingRequestsSection({ status, onAccept, onDecline, onComplete }: {
@@ -57,12 +64,42 @@ export function BookingRequestsSection({ status, onAccept, onDecline, onComplete
   const [bookings, setBookings] = useState<BookingRequest[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchBookings = useCallback(() => {
     fetch(`/api/instructor/booking-requests?status=${status}`)
       .then((r) => r.json())
       .then((data) => setBookings(Array.isArray(data) ? data : []))
       .finally(() => setLoading(false));
   }, [status]);
+
+  useEffect(() => {
+    fetchBookings();
+
+    // Real-time: re-fetch immediately when a booking row is deleted (student cancels).
+    const supabase = createClient();
+    let channel: ReturnType<NonNullable<typeof supabase>["channel"]> | null = null;
+    if (supabase) {
+      channel = supabase
+        .channel(`booking-requests-${status}`)
+        .on(
+          "postgres_changes",
+          { event: "DELETE", schema: "public", table: "booking_requests" },
+          () => fetchBookings()
+        )
+        .subscribe();
+    }
+
+    // Fallback polling every 15 s for the pending tab (handles cases where
+    // real-time isn't configured yet).
+    let pollTimer: ReturnType<typeof setInterval> | null = null;
+    if (status === "pending") {
+      pollTimer = setInterval(() => fetchBookings(), 15_000);
+    }
+
+    return () => {
+      if (supabase && channel) supabase.removeChannel(channel);
+      if (pollTimer) clearInterval(pollTimer);
+    };
+  }, [fetchBookings, status]);
 
   if (loading) return <p className="text-sm text-slate-500">{t("loading")}</p>;
   if (bookings.length === 0) return <p className="text-sm text-slate-500">{t("noBookings")}</p>;
@@ -70,7 +107,8 @@ export function BookingRequestsSection({ status, onAccept, onDecline, onComplete
   return (
     <ul className="space-y-3">
       {bookings.map((b) => {
-        const tags = b.conditions ? conditionTags(b.conditions, locale) : [];
+        const primaryTags  = b.conditions ? conditionPrimaryTags(b.conditions, locale) : [];
+        const expandedTags = b.conditions ? conditionExpandedTags(b.conditions, locale) : [];
         return (
           <li key={b.id} className="rounded-lg border border-slate-200 bg-white p-4">
             <p className="font-semibold text-slate-900">{b.student_name ?? "Student"}</p>
@@ -83,18 +121,9 @@ export function BookingRequestsSection({ status, onAccept, onDecline, onComplete
               )}
             </p>
 
-            {/* Teaching conditions from the linked availability slot */}
-            {tags.length > 0 && (
-              <div className="mt-2 flex flex-wrap gap-1">
-                {tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600"
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
+            {/* Teaching conditions */}
+            {(primaryTags.length > 0 || expandedTags.length > 0) && (
+              <SlotTagsDisplay primaryTags={primaryTags} expandedTags={expandedTags} />
             )}
 
             {b.message && (

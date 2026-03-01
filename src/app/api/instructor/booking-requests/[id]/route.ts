@@ -26,7 +26,7 @@ type SlotRow = {
   discipline_ids: string[];
   resort_ids: string[];
   language_ids: string[];
-  skill_level_id: string | null;
+  skill_level_ids: string[];
   improvement_area_ids: string[];
 };
 
@@ -41,7 +41,7 @@ async function amendSlot(
     discipline_ids:       slot.discipline_ids,
     resort_ids:           slot.resort_ids,
     language_ids:         slot.language_ids,
-    skill_level_id:       slot.skill_level_id,
+    skill_level_ids:      slot.skill_level_ids,
     improvement_area_ids: slot.improvement_area_ids,
   };
 
@@ -119,7 +119,7 @@ export async function PATCH(
     if (booking.availability_slot_id) {
       const { data: s } = await supabase
         .from("availability_slots")
-        .select("id, instructor_id, start_date, end_date, discipline_ids, resort_ids, language_ids, skill_level_id, improvement_area_ids")
+        .select("id, instructor_id, start_date, end_date, discipline_ids, resort_ids, language_ids, skill_level_ids, improvement_area_ids")
         .eq("id", booking.availability_slot_id)
         .eq("instructor_id", instructorId)
         .single();
@@ -131,7 +131,7 @@ export async function PATCH(
     if (!slot) {
       const { data: matches } = await supabase
         .from("availability_slots")
-        .select("id, instructor_id, start_date, end_date, discipline_ids, resort_ids, language_ids, skill_level_id, improvement_area_ids")
+        .select("id, instructor_id, start_date, end_date, discipline_ids, resort_ids, language_ids, skill_level_ids, improvement_area_ids")
         .eq("instructor_id", instructorId)
         .lte("start_date", bookingStart)
         .gte("end_date",   bookingEnd);

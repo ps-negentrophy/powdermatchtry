@@ -79,7 +79,7 @@ export interface ResolvedAvailabilitySlot {
   resolved_disciplines: ResolvedNameItem[];
   resolved_resorts: ResolvedNameItem[];
   resolved_languages: ResolvedNameItem[];
-  resolved_skill_level: ResolvedNameItem | null;
+  resolved_skill_levels: ResolvedNameItem[];
   resolved_improvement_areas: ResolvedNameItem[];
 }
 

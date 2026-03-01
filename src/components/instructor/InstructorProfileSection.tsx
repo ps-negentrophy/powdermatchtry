@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { InstructorConditionsForm, type ConditionsState } from "./InstructorConditionsForm";
+import { SlotTagsDisplay } from "@/components/SlotTagsDisplay";
 import type { Resort, Language, SkillLevel, ImprovementArea, Discipline } from "@/types/database";
 import {
   DEFAULT_RESORTS,
@@ -26,13 +27,13 @@ interface AvailabilitySlot {
   discipline_ids: string[];
   resort_ids: string[];
   language_ids: string[];
-  skill_level_id: string | null;
+  skill_level_ids: string[];
   improvement_area_ids: string[];
   created_at: string;
   resolved_disciplines: ResolvedNameItem[];
   resolved_resorts: ResolvedNameItem[];
   resolved_languages: ResolvedNameItem[];
-  resolved_skill_level: ResolvedNameItem | null;
+  resolved_skill_levels: ResolvedNameItem[];
   resolved_improvement_areas: ResolvedNameItem[];
 }
 
@@ -43,7 +44,8 @@ const EMPTY_CONDITIONS: ConditionsState = {
   resortOperator: "or",
   languageIds: [],
   languageOperator: "or",
-  skillLevelId: "",
+  skillLevelIds: [],
+  skillLevelOperator: "or",
   improvementAreaIds: [],
   improvementAreaOperator: "or",
 };
@@ -120,17 +122,26 @@ export function InstructorProfileSection({ reloadTrigger = 0 }: { reloadTrigger?
     if (!startDate || !endDate) return;
     setSaving(true);
     setSaveError(null);
+
+    // "Any" means the instructor can fulfil ALL options in that category (OR logic).
+    // Expand empty selections to the full list of available IDs before saving.
+    const effectiveDisciplineIds  = conditions.disciplineIds.length      > 0 ? conditions.disciplineIds      : disciplines.map((d) => d.id);
+    const effectiveResortIds      = conditions.resortIds.length          > 0 ? conditions.resortIds          : resorts.map((r) => r.id);
+    const effectiveLanguageIds    = conditions.languageIds.length        > 0 ? conditions.languageIds        : languages.map((l) => l.id);
+    const effectiveSkillLevelIds  = conditions.skillLevelIds.length      > 0 ? conditions.skillLevelIds      : skillLevels.map((s) => s.id);
+    const effectiveImprovementIds = conditions.improvementAreaIds.length > 0 ? conditions.improvementAreaIds : improvementAreas.map((a) => a.id);
+
     const res = await fetch("/api/instructor/availability-slots", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         start_date: startDate,
         end_date: endDate,
-        discipline_ids: conditions.disciplineIds,
-        resort_ids: conditions.resortIds,
-        language_ids: conditions.languageIds,
-        skill_level_id: conditions.skillLevelId || null,
-        improvement_area_ids: conditions.improvementAreaIds,
+        discipline_ids:       effectiveDisciplineIds,
+        resort_ids:           effectiveResortIds,
+        language_ids:         effectiveLanguageIds,
+        skill_level_ids:      effectiveSkillLevelIds,
+        improvement_area_ids: effectiveImprovementIds,
       }),
     });
     if (res.ok) {
@@ -155,14 +166,19 @@ export function InstructorProfileSection({ reloadTrigger = 0 }: { reloadTrigger?
     setDeletingId(null);
   }
 
-  function getSlotTags(slot: AvailabilitySlot): string[] {
-    const tags: string[] = [];
-    tags.push(...(slot.resolved_disciplines ?? []).map((i) => localizedName(i, locale)));
-    tags.push(...(slot.resolved_resorts ?? []).map((i) => localizedName(i, locale)));
-    tags.push(...(slot.resolved_languages ?? []).map((i) => localizedName(i, locale)));
-    if (slot.resolved_skill_level) tags.push(localizedName(slot.resolved_skill_level, locale));
-    tags.push(...(slot.resolved_improvement_areas ?? []).map((i) => localizedName(i, locale)));
-    return tags;
+  function getSlotPrimaryTags(slot: AvailabilitySlot): string[] {
+    return [
+      ...(slot.resolved_disciplines ?? []).map((i) => localizedName(i, locale)),
+      ...(slot.resolved_resorts ?? []).map((i) => localizedName(i, locale)),
+      ...(slot.resolved_languages ?? []).map((i) => localizedName(i, locale)),
+    ];
+  }
+
+  function getSlotExpandedTags(slot: AvailabilitySlot): string[] {
+    return [
+      ...(slot.resolved_skill_levels ?? []).map((i) => localizedName(i, locale)),
+      ...(slot.resolved_improvement_areas ?? []).map((i) => localizedName(i, locale)),
+    ];
   }
 
   // True when the DB reference tables have not been seeded yet (IDs are fake defaults like "1").
@@ -256,7 +272,8 @@ export function InstructorProfileSection({ reloadTrigger = 0 }: { reloadTrigger?
         ) : (
           <ul className="space-y-3">
             {slots.map((slot) => {
-              const tags = getSlotTags(slot);
+              const primaryTags  = getSlotPrimaryTags(slot);
+              const expandedTags = getSlotExpandedTags(slot);
               return (
                 <li
                   key={slot.id}
@@ -269,17 +286,8 @@ export function InstructorProfileSection({ reloadTrigger = 0 }: { reloadTrigger?
                         <> &ndash; {formatDate(slot.end_date)}</>
                       )}
                     </p>
-                    {tags.length > 0 ? (
-                      <div className="mt-2 flex flex-wrap gap-1.5">
-                        {tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs text-slate-600"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+                    {primaryTags.length > 0 || expandedTags.length > 0 ? (
+                      <SlotTagsDisplay primaryTags={primaryTags} expandedTags={expandedTags} />
                     ) : (
                       <p className="mt-1 text-xs text-slate-400">{t("noConditions")}</p>
                     )}

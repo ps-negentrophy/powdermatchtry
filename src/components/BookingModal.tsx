@@ -3,6 +3,15 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import { createClient } from "@/lib/supabase/client";
+import { SlotTagsDisplay } from "./SlotTagsDisplay";
+
+interface SelectedConditionIds {
+  disciplineIds: string[];
+  resortIds: string[];
+  languageIds: string[];
+  skillLevelIds: string[];
+  improvementAreaIds: string[];
+}
 
 interface BookingModalProps {
   instructorId: string;
@@ -10,6 +19,11 @@ interface BookingModalProps {
   slotId?: string;
   defaultStartDate?: string;
   defaultEndDate?: string;
+  slotStartDate?: string;
+  slotEndDate?: string;
+  conditionPrimaryTags?: string[];
+  conditionExpandedTags?: string[];
+  selectedConditionIds?: SelectedConditionIds;
   onClose: () => void;
 }
 
@@ -26,10 +40,18 @@ export function BookingModal({
   slotId,
   defaultStartDate,
   defaultEndDate,
+  slotStartDate,
+  slotEndDate,
+  conditionPrimaryTags = [],
+  conditionExpandedTags = [],
+  selectedConditionIds,
   onClose,
 }: BookingModalProps) {
   const t = useTranslations("booking");
   const today = new Date().toISOString().slice(0, 10);
+  // Earliest and latest dates the student may pick — bounded by the slot range.
+  const minDate = slotStartDate ?? today;
+  const maxDate = slotEndDate;
 
   const [authState, setAuthState] = useState<AuthState>("loading");
   const [startDate, setStartDate] = useState(defaultStartDate ?? "");
@@ -78,6 +100,11 @@ export function BookingModal({
         end_date: endDate,
         message: message.trim() || undefined,
         availability_slot_id: slotId ?? undefined,
+        selected_discipline_ids:      selectedConditionIds?.disciplineIds     ?? [],
+        selected_resort_ids:          selectedConditionIds?.resortIds         ?? [],
+        selected_language_ids:        selectedConditionIds?.languageIds       ?? [],
+        selected_skill_level_ids:     selectedConditionIds?.skillLevelIds     ?? [],
+        selected_improvement_area_ids: selectedConditionIds?.improvementAreaIds ?? [],
       }),
     });
     if (res.ok) {
@@ -154,7 +181,8 @@ export function BookingModal({
                     <input
                       type="date"
                       value={startDate}
-                      min={today}
+                      min={minDate}
+                      max={maxDate}
                       onChange={(e) => {
                         setStartDate(e.target.value);
                         if (endDate && e.target.value > endDate) setEndDate(e.target.value);
@@ -167,18 +195,33 @@ export function BookingModal({
                     <input
                       type="date"
                       value={endDate}
-                      min={startDate || today}
+                      min={startDate || minDate}
+                      max={maxDate}
                       onChange={(e) => setEndDate(e.target.value)}
                       className="rounded border border-slate-300 px-3 py-2 text-sm"
                     />
                   </div>
                 </div>
-                {startDate && endDate && startDate !== endDate && (
-                  <p className="mt-1.5 text-xs text-slate-500">
-                    {formatDateDisplay(startDate)} – {formatDateDisplay(endDate)}
+                {slotStartDate && slotEndDate && (
+                  <p className="mt-1.5 text-xs text-slate-400">
+                    {t("slotRange")}: {formatDateDisplay(slotStartDate)} – {formatDateDisplay(slotEndDate)}
                   </p>
                 )}
               </div>
+
+              {/* Lesson conditions */}
+              {(conditionPrimaryTags.length > 0 || conditionExpandedTags.length > 0) && (
+                <div>
+                  <p className="mb-1.5 text-sm font-medium text-slate-700">{t("conditionsLabel")}</p>
+                  <div className="rounded-lg border border-slate-100 bg-slate-50 px-3 py-2.5">
+                    <SlotTagsDisplay
+                      primaryTags={conditionPrimaryTags}
+                      expandedTags={conditionExpandedTags}
+                      tagClassName="rounded-full bg-white border border-slate-200 px-2.5 py-0.5 text-xs text-slate-600"
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* Message */}
               <div>

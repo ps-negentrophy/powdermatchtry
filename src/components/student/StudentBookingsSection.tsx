@@ -1,7 +1,17 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
+import type { ResolvedNameItem } from "@/types/database";
+import { SlotTagsDisplay } from "@/components/SlotTagsDisplay";
+
+interface SlotConditions {
+  disciplines: ResolvedNameItem[];
+  resorts: ResolvedNameItem[];
+  languages: ResolvedNameItem[];
+  skill_levels: ResolvedNameItem[];
+  improvement_areas: ResolvedNameItem[];
+}
 
 interface BookingRecord {
   id: string;
@@ -12,6 +22,7 @@ interface BookingRecord {
   message?: string;
   status: "pending" | "accepted" | "declined" | "completed";
   created_at: string;
+  conditions: SlotConditions | null;
 }
 
 const STATUS_STYLES: Record<string, string> = {
@@ -26,14 +37,41 @@ function formatDate(dateStr: string): string {
   return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
 }
 
+function getLocalizedName(
+  item: { name_en: string; name_zh: string | null; name_ja: string | null },
+  locale: string
+): string {
+  if (locale === "zh" && item.name_zh) return item.name_zh;
+  if (locale === "ja" && item.name_ja) return item.name_ja;
+  return item.name_en;
+}
+
+function conditionPrimaryTags(conditions: SlotConditions, locale: string): string[] {
+  return [
+    ...conditions.disciplines.map((i) => getLocalizedName(i, locale)),
+    ...conditions.resorts.map((i) => getLocalizedName(i, locale)),
+    ...conditions.languages.map((i) => getLocalizedName(i, locale)),
+  ];
+}
+
+function conditionExpandedTags(conditions: SlotConditions, locale: string): string[] {
+  return [
+    ...conditions.skill_levels.map((i) => getLocalizedName(i, locale)),
+    ...conditions.improvement_areas.map((i) => getLocalizedName(i, locale)),
+  ];
+}
+
 export function StudentBookingsSection({
   status,
 }: {
   status: "pending" | "accepted" | "declined" | "completed";
 }) {
   const t = useTranslations("user.student");
+  const locale = useLocale();
   const [bookings, setBookings] = useState<BookingRecord[]>([]);
   const [loading, setLoading] = useState(true);
+  const [cancelling, setCancelling] = useState<string | null>(null);
+  const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
     fetch(`/api/student/booking-requests?status=${status}`)
@@ -42,31 +80,77 @@ export function StudentBookingsSection({
       .finally(() => setLoading(false));
   }, [status]);
 
+  async function handleCancel(id: string) {
+    if (!window.confirm(t("cancelConfirm"))) return;
+    setCancelling(id);
+    setCancelError(null);
+    const res = await fetch(`/api/student/booking-requests/${id}`, { method: "DELETE" });
+    if (res.ok) {
+      setBookings((prev) => prev.filter((b) => b.id !== id));
+    } else {
+      setCancelError(t("cancelError"));
+    }
+    setCancelling(null);
+  }
+
   if (loading) return <p className="text-sm text-slate-500">{t("loading")}</p>;
   if (bookings.length === 0)
     return <p className="text-sm text-slate-400">{t("noBookings")}</p>;
 
   return (
-    <ul className="space-y-3">
-      {bookings.map((b) => (
-        <li key={b.id} className="rounded-lg border border-slate-200 p-4">
-          <div className="flex items-start justify-between gap-2">
-            <p className="font-medium text-slate-900">{b.instructor_name}</p>
-            <span className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[b.status] ?? ""}`}>
-              {t(`status.${b.status}`)}
-            </span>
-          </div>
-          <p className="mt-1 text-sm text-slate-600">
-            {formatDate(b.start_date)}
-            {b.end_date && b.end_date !== b.start_date && (
-              <> &ndash; {formatDate(b.end_date)}</>
-            )}
-          </p>
-          {b.message && (
-            <p className="mt-1 text-sm text-slate-500 line-clamp-2">{b.message}</p>
-          )}
-        </li>
-      ))}
-    </ul>
+    <>
+      {cancelError && (
+        <p className="mb-2 text-xs text-red-600">{cancelError}</p>
+      )}
+      <ul className="space-y-3">
+        {bookings.map((b) => {
+          const primaryTags  = b.conditions ? conditionPrimaryTags(b.conditions, locale) : [];
+          const expandedTags = b.conditions ? conditionExpandedTags(b.conditions, locale) : [];
+          return (
+            <li key={b.id} className="rounded-lg border border-slate-200 p-4">
+              <div className="flex items-start justify-between gap-2">
+                <p className="font-semibold text-slate-900">{b.instructor_name}</p>
+                <span className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${STATUS_STYLES[b.status] ?? ""}`}>
+                  {t(`status.${b.status}`)}
+                </span>
+              </div>
+
+              {/* Teaching dates */}
+              <p className="mt-0.5 text-sm font-medium text-slate-700">
+                {formatDate(b.start_date)}
+                {b.end_date && b.end_date !== b.start_date && (
+                  <> &ndash; {formatDate(b.end_date)}</>
+                )}
+              </p>
+
+              {/* Teaching conditions */}
+              {(primaryTags.length > 0 || expandedTags.length > 0) && (
+                <SlotTagsDisplay primaryTags={primaryTags} expandedTags={expandedTags} />
+              )}
+
+              {b.message && (
+                <p className="mt-2 text-sm text-slate-500 line-clamp-2 border-t border-slate-100 pt-2">
+                  {b.message}
+                </p>
+              )}
+
+              {/* Cancel button — only for pending requests */}
+              {b.status === "pending" && (
+                <div className="mt-3 flex justify-end border-t border-slate-100 pt-3">
+                  <button
+                    type="button"
+                    disabled={cancelling === b.id}
+                    onClick={() => handleCancel(b.id)}
+                    className="rounded-lg border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50 transition-colors"
+                  >
+                    {cancelling === b.id ? "..." : t("cancelRequest")}
+                  </button>
+                </div>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+    </>
   );
 }

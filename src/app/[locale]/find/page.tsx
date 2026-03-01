@@ -80,7 +80,14 @@ function filterInstructors(
     ) {
       return false;
     }
-    if (filters.skillLevelId && !inst.skill_levels.some((s) => s.id === filters.skillLevelId)) {
+    if (
+      filters.skillLevelIds.length > 0 &&
+      !matchesRelation(
+        inst.skill_levels.map((s) => s.id),
+        filters.skillLevelIds,
+        filters.skillLevelOperator
+      )
+    ) {
       return false;
     }
     if (
@@ -107,6 +114,21 @@ function filterInstructors(
   });
 }
 
+const EMPTY_FILTERS: InstructorFiltersState = {
+  startDate: undefined,
+  endDate: undefined,
+  resortIds: [],
+  resortOperator: "or",
+  languageIds: [],
+  languageOperator: "or",
+  skillLevelIds: [],
+  skillLevelOperator: "or",
+  improvementAreaIds: [],
+  improvementAreaOperator: "or",
+  disciplineIds: [],
+  disciplineOperator: "or",
+};
+
 export default function FindInstructorPage() {
   const t = useTranslations("filters");
   const [instructors, setInstructors] = useState<InstructorWithRelations[]>([]);
@@ -117,21 +139,11 @@ export default function FindInstructorPage() {
   const [disciplines, setDisciplines] = useState<Discipline[]>(DEFAULT_DISCIPLINES);
   const [loading, setLoading] = useState(true);
   const [useMockData, setUseMockData] = useState(false);
-  const [filters, setFilters] = useState<InstructorFiltersState>({
-    startDate: undefined,
-    endDate: undefined,
-    resortIds: [],
-    resortOperator: "or",
-    languageIds: [],
-    languageOperator: "or",
-    improvementAreaIds: [],
-    improvementAreaOperator: "or",
-    disciplineIds: [],
-    disciplineOperator: "or",
-  });
+  const [filters, setFilters] = useState<InstructorFiltersState>(EMPTY_FILTERS);
 
+  // Load filter option lists once on mount
   useEffect(() => {
-    async function fetchFilters() {
+    async function fetchFilterOptions() {
       try {
         const [rRes, lRes, sRes, iRes, dRes] = await Promise.all([
           fetch("/api/resorts"),
@@ -146,15 +158,10 @@ export default function FindInstructorPage() {
         if (iRes.ok) setImprovementAreas(await iRes.json());
         if (dRes.ok) setDisciplines(await dRes.json());
       } catch {
-        setResorts(DEFAULT_RESORTS);
-        setLanguages(DEFAULT_LANGUAGES);
-        setSkillLevels(DEFAULT_SKILL_LEVELS);
-        setImprovementAreas(DEFAULT_IMPROVEMENT_AREAS);
-        setDisciplines(DEFAULT_DISCIPLINES);
+        // keep defaults
       }
-      setLoading(false);
     }
-    fetchFilters();
+    fetchFilterOptions();
   }, []);
 
   useEffect(() => {
@@ -172,7 +179,10 @@ export default function FindInstructorPage() {
           params.set("languageIds", filters.languageIds.join(","));
           params.set("languageOperator", filters.languageOperator);
         }
-        if (filters.skillLevelId) params.set("skillLevelId", filters.skillLevelId);
+        if (filters.skillLevelIds.length) {
+          params.set("skillLevelIds", filters.skillLevelIds.join(","));
+          params.set("skillLevelOperator", filters.skillLevelOperator);
+        }
         if (filters.improvementAreaIds.length) {
           params.set("improvementAreaIds", filters.improvementAreaIds.join(","));
           params.set("improvementAreaOperator", filters.improvementAreaOperator);
@@ -199,10 +209,44 @@ export default function FindInstructorPage() {
     fetchInstructors();
   }, [filters]);
 
-  const displayedInstructors = useMemo(() => {
-    if (!useMockData) return instructors;
-    return filterInstructors(instructors, filters);
+  // Flatten each instructor's availability slots into individual cards.
+  const displayedCards = useMemo(() => {
+    const source = useMockData ? filterInstructors(instructors, filters) : instructors;
+    return source.flatMap((instructor) =>
+      (instructor.availability_slots ?? []).map((slot) => ({ instructor, slot }))
+    );
   }, [instructors, filters, useMockData]);
+
+  // Resolve the student's selected filter conditions into display tag strings.
+  const selectedPrimaryTags = useMemo(() => {
+    const tags: string[] = [];
+    filters.disciplineIds.forEach((id) => {
+      const d = disciplines.find((x) => x.id === id);
+      if (d) tags.push(d.name_en);
+    });
+    filters.resortIds.forEach((id) => {
+      const r = resorts.find((x) => x.id === id);
+      if (r) tags.push(r.name_en);
+    });
+    filters.languageIds.forEach((id) => {
+      const l = languages.find((x) => x.id === id);
+      if (l) tags.push(l.name_en);
+    });
+    return tags;
+  }, [filters.disciplineIds, filters.resortIds, filters.languageIds, disciplines, resorts, languages]);
+
+  const selectedExpandedTags = useMemo(() => {
+    const tags: string[] = [];
+    filters.skillLevelIds.forEach((id) => {
+      const s = skillLevels.find((x) => x.id === id);
+      if (s) tags.push(s.name_en);
+    });
+    filters.improvementAreaIds.forEach((id) => {
+      const a = improvementAreas.find((x) => x.id === id);
+      if (a) tags.push(a.name_en);
+    });
+    return tags;
+  }, [filters.skillLevelIds, filters.improvementAreaIds, skillLevels, improvementAreas]);
 
   return (
     <div className="space-y-8">
@@ -217,18 +261,29 @@ export default function FindInstructorPage() {
         onFiltersChange={setFilters}
       />
       <section>
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">Eligible Lessons</h2>
         {loading ? (
           <p className="text-slate-500">Loading...</p>
-        ) : displayedInstructors.length === 0 ? (
-          <p className="text-slate-500">No instructors match your criteria. Try adjusting your filters.</p>
+        ) : displayedCards.length === 0 ? (
+          <p className="text-slate-500">No availability slots match your filters. Try adjusting your criteria.</p>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {displayedInstructors.map((instructor) => (
+            {displayedCards.map(({ instructor, slot }) => (
               <InstructorCard
-                key={instructor.id}
+                key={`${instructor.id}-${slot.id}`}
                 instructor={instructor}
+                slot={slot}
                 defaultStartDate={filters.startDate}
                 defaultEndDate={filters.endDate}
+                selectedConditionPrimaryTags={selectedPrimaryTags}
+                selectedConditionExpandedTags={selectedExpandedTags}
+                selectedConditionIds={{
+                  disciplineIds:      filters.disciplineIds,
+                  resortIds:          filters.resortIds,
+                  languageIds:        filters.languageIds,
+                  skillLevelIds:      filters.skillLevelIds,
+                  improvementAreaIds: filters.improvementAreaIds,
+                }}
               />
             ))}
           </div>

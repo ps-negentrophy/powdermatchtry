@@ -12,7 +12,8 @@ export interface ConditionsState {
   resortOperator: "and" | "or";
   languageIds: string[];
   languageOperator: "and" | "or";
-  skillLevelId: string;
+  skillLevelIds: string[];
+  skillLevelOperator: "and" | "or";
   improvementAreaIds: string[];
   improvementAreaOperator: "and" | "or";
 }
@@ -62,7 +63,7 @@ export function InstructorConditionsForm({
         options={resorts}
         selectedIds={conditions.resortIds}
         operator={conditions.resortOperator}
-        placeholder={t("allResorts")}
+        placeholder={t("any")}
         locale={locale}
         matchLabel={t("matchLabel")}
         andAll={t("andAll")}
@@ -74,32 +75,31 @@ export function InstructorConditionsForm({
         options={languages}
         selectedIds={conditions.languageIds}
         operator={conditions.languageOperator}
-        placeholder={t("anyLanguage")}
+        placeholder={t("any")}
         locale={locale}
         matchLabel={t("matchLabel")}
         andAll={t("andAll")}
         orAny={t("orAny")}
         onSelectionChange={(ids, op) => update({ languageIds: ids, languageOperator: op })}
       />
-      <div>
-        <label className="mb-1 block text-sm font-medium text-slate-700">{t("skillLevel")}</label>
-        <select
-          className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
-          value={conditions.skillLevelId}
-          onChange={(e) => update({ skillLevelId: e.target.value })}
-        >
-          <option value="">{t("anyLevel")}</option>
-          {skillLevels.map((s) => (
-            <option key={s.id} value={s.id}>{s.name_en}</option>
-          ))}
-        </select>
-      </div>
+      <MultiSelectFilter
+        label={t("skillLevel")}
+        options={skillLevels}
+        selectedIds={conditions.skillLevelIds}
+        operator={conditions.skillLevelOperator}
+        placeholder={t("any")}
+        locale={locale}
+        matchLabel={t("matchLabel")}
+        andAll={t("andAll")}
+        orAny={t("orAny")}
+        onSelectionChange={(ids, op) => update({ skillLevelIds: ids, skillLevelOperator: op })}
+      />
       <MultiSelectFilter
         label={t("areaToImprove")}
         options={improvementAreas}
         selectedIds={conditions.improvementAreaIds}
         operator={conditions.improvementAreaOperator}
-        placeholder={t("anyArea")}
+        placeholder={t("any")}
         locale={locale}
         matchLabel={t("matchLabel")}
         andAll={t("andAll")}

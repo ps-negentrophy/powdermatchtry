@@ -54,6 +54,13 @@ export function StudentDashboard({ email, displayName }: StudentDashboardProps) 
 
           <section>
             <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
+              {t("declinedBookings")}
+            </h3>
+            <StudentBookingsSection status="declined" />
+          </section>
+
+          <section>
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-500">
               {t("completedBookings")}
             </h3>
             <StudentBookingsSection status="completed" />

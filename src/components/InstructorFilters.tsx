@@ -13,7 +13,8 @@ export interface InstructorFiltersState {
   resortOperator: FilterOperator;
   languageIds: string[];
   languageOperator: FilterOperator;
-  skillLevelId?: string;
+  skillLevelIds: string[];
+  skillLevelOperator: FilterOperator;
   improvementAreaIds: string[];
   improvementAreaOperator: FilterOperator;
   disciplineIds: string[];
@@ -104,6 +105,9 @@ export function InstructorFilters({
       </div>
 
       {/* Condition filters row */}
+      <div>
+        <p className="mb-2 text-sm font-medium text-slate-700">{t("lessonConditions")}</p>
+      </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <MultiSelectFilter
           label={t("discipline")}
@@ -122,7 +126,7 @@ export function InstructorFilters({
           options={resorts}
           selectedIds={filters.resortIds}
           operator={filters.resortOperator}
-          placeholder={t("allResorts")}
+          placeholder={t("any")}
           locale={locale}
           matchLabel={t("matchLabel")}
           andAll={t("andAll")}
@@ -134,34 +138,31 @@ export function InstructorFilters({
           options={languages}
           selectedIds={filters.languageIds}
           operator={filters.languageOperator}
-          placeholder={t("anyLanguage")}
+          placeholder={t("any")}
           locale={locale}
           matchLabel={t("matchLabel")}
           andAll={t("andAll")}
           orAny={t("orAny")}
           onSelectionChange={(ids, op) => update({ languageIds: ids, languageOperator: op })}
         />
-        <div>
-          <label className="mb-1 block text-sm font-medium text-slate-700">{t("skillLevel")}</label>
-          <select
-            className="w-full rounded border border-slate-300 px-3 py-2 text-sm"
-            value={filters.skillLevelId ?? ""}
-            onChange={(e) => update({ skillLevelId: e.target.value || undefined })}
-          >
-            <option value="">{t("anyLevel")}</option>
-            {skillLevels.map((s) => (
-              <option key={s.id} value={s.id}>
-                {getLocalizedName(s, locale)}
-              </option>
-            ))}
-          </select>
-        </div>
+        <MultiSelectFilter
+          label={t("skillLevel")}
+          options={skillLevels}
+          selectedIds={filters.skillLevelIds}
+          operator={filters.skillLevelOperator}
+          placeholder={t("any")}
+          locale={locale}
+          matchLabel={t("matchLabel")}
+          andAll={t("andAll")}
+          orAny={t("orAny")}
+          onSelectionChange={(ids, op) => update({ skillLevelIds: ids, skillLevelOperator: op })}
+        />
         <MultiSelectFilter
           label={t("areaToImprove")}
           options={improvementAreas}
           selectedIds={filters.improvementAreaIds}
           operator={filters.improvementAreaOperator}
-          placeholder={t("anyArea")}
+          placeholder={t("any")}
           locale={locale}
           matchLabel={t("matchLabel")}
           andAll={t("andAll")}
