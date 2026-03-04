@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import type { InstructorWithRelations, ResolvedNameItem, ResolvedAvailabilitySlot } from "@/types/database";
 import { BookingModal } from "./BookingModal";
 import { SlotTagsDisplay } from "./SlotTagsDisplay";
@@ -71,7 +71,9 @@ export function InstructorCard({
   selectedConditionIds,
 }: InstructorCardProps) {
   const locale = useLocale() as Locale;
+  const t = useTranslations("common");
   const bio = getBio(instructor, locale);
+  const qualificationText = instructor.certification_body ?? t("qualificationNotSpecified");
   const [modalOpen, setModalOpen] = useState(false);
   const primaryTags  = slotPrimaryTags(slot, locale);
   const expandedTags = slotExpandedTags(slot, locale);
@@ -96,6 +98,7 @@ export function InstructorCard({
               </span>
             )}
           </div>
+          <p className="mt-0.5 text-sm text-slate-600">{qualificationText}</p>
           {bio && <p className="mt-1 text-sm text-slate-600 line-clamp-2">{bio}</p>}
         </div>
       </div>

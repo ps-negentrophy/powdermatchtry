@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useTranslations } from "next-intl";
+import { createClient } from "@/lib/supabase/client";
 import { InstructorFilters } from "@/components/InstructorFilters";
 import type { InstructorFiltersState } from "@/components/InstructorFilters";
 import { InstructorCard } from "@/components/InstructorCard";
@@ -164,50 +165,73 @@ export default function FindInstructorPage() {
     fetchFilterOptions();
   }, []);
 
-  useEffect(() => {
-    async function fetchInstructors() {
-      setLoading(true);
-      try {
-        const params = new URLSearchParams();
-        if (filters.startDate) params.set("startDate", filters.startDate);
-        if (filters.endDate) params.set("endDate", filters.endDate);
-        if (filters.resortIds.length) {
-          params.set("resortIds", filters.resortIds.join(","));
-          params.set("resortOperator", filters.resortOperator);
-        }
-        if (filters.languageIds.length) {
-          params.set("languageIds", filters.languageIds.join(","));
-          params.set("languageOperator", filters.languageOperator);
-        }
-        if (filters.skillLevelIds.length) {
-          params.set("skillLevelIds", filters.skillLevelIds.join(","));
-          params.set("skillLevelOperator", filters.skillLevelOperator);
-        }
-        if (filters.improvementAreaIds.length) {
-          params.set("improvementAreaIds", filters.improvementAreaIds.join(","));
-          params.set("improvementAreaOperator", filters.improvementAreaOperator);
-        }
-        if (filters.disciplineIds.length) {
-          params.set("disciplineIds", filters.disciplineIds.join(","));
-          params.set("disciplineOperator", filters.disciplineOperator);
-        }
-        const res = await fetch(`/api/instructors?${params}`);
-        if (res.ok) {
-          const data = await res.json();
-          setInstructors(Array.isArray(data) ? data : []);
-          setUseMockData(false);
-        } else {
-          setInstructors(MOCK_INSTRUCTORS);
-          setUseMockData(true);
-        }
-      } catch {
+  const fetchInstructors = useCallback(async (silent = false) => {
+    if (!silent) setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (filters.startDate) params.set("startDate", filters.startDate);
+      if (filters.endDate) params.set("endDate", filters.endDate);
+      if (filters.resortIds.length) {
+        params.set("resortIds", filters.resortIds.join(","));
+        params.set("resortOperator", filters.resortOperator);
+      }
+      if (filters.languageIds.length) {
+        params.set("languageIds", filters.languageIds.join(","));
+        params.set("languageOperator", filters.languageOperator);
+      }
+      if (filters.skillLevelIds.length) {
+        params.set("skillLevelIds", filters.skillLevelIds.join(","));
+        params.set("skillLevelOperator", filters.skillLevelOperator);
+      }
+      if (filters.improvementAreaIds.length) {
+        params.set("improvementAreaIds", filters.improvementAreaIds.join(","));
+        params.set("improvementAreaOperator", filters.improvementAreaOperator);
+      }
+      if (filters.disciplineIds.length) {
+        params.set("disciplineIds", filters.disciplineIds.join(","));
+        params.set("disciplineOperator", filters.disciplineOperator);
+      }
+      const res = await fetch(`/api/instructors?${params}`, { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setInstructors(Array.isArray(data) ? data : []);
+        setUseMockData(false);
+      } else {
         setInstructors(MOCK_INSTRUCTORS);
         setUseMockData(true);
       }
-      setLoading(false);
+    } catch {
+      setInstructors(MOCK_INSTRUCTORS);
+      setUseMockData(true);
     }
-    fetchInstructors();
+    setLoading(false);
   }, [filters]);
+
+  useEffect(() => {
+    fetchInstructors();
+  }, [fetchInstructors]);
+
+  // Real-time sync: refetch when availability slots change (instructor adds/deletes)
+  useEffect(() => {
+    const supabase = createClient();
+    let channel: ReturnType<NonNullable<typeof supabase>["channel"]> | null = null;
+    if (supabase) {
+      channel = supabase
+        .channel("find-availability-slots")
+        .on(
+          "postgres_changes",
+          { event: "*", schema: "public", table: "availability_slots" },
+          () => fetchInstructors(true)
+        )
+        .subscribe();
+    }
+    // Polling fallback every 15s (in case Realtime isn't enabled)
+    const pollTimer = setInterval(() => fetchInstructors(true), 15_000);
+    return () => {
+      if (supabase && channel) supabase.removeChannel(channel);
+      clearInterval(pollTimer);
+    };
+  }, [fetchInstructors]);
 
   // Flatten each instructor's availability slots into individual cards.
   const displayedCards = useMemo(() => {

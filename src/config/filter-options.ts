@@ -7,9 +7,15 @@ import type { Resort, Language, SkillLevel, ImprovementArea, Discipline } from "
  */
 
 export const DEFAULT_RESORTS: Resort[] = [
-  { id: "1", slug: "niseko", name_en: "Niseko", name_zh: "二世古", name_ja: "ニセコ", region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 0, metadata: {} },
-  { id: "2", slug: "rusutsu", name_en: "Rusutsu", name_zh: "留寿都", name_ja: "ルスツ", region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 1, metadata: {} },
-  { id: "3", slug: "kiroro", name_en: "Kiroro", name_zh: "喜乐乐", name_ja: "キロロ", region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 2, metadata: {} },
+  { id: "1", slug: "niseko-grand-hirafu", name_en: "Niseko Grand Hirafu", name_zh: null, name_ja: null, region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 0, metadata: {} },
+  { id: "2", slug: "niseko-hanazono", name_en: "Niseko Hanazono", name_zh: null, name_ja: null, region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 1, metadata: {} },
+  { id: "3", slug: "niseko-village", name_en: "Niseko Village", name_zh: null, name_ja: null, region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 2, metadata: {} },
+  { id: "4", slug: "niseko-annupuri", name_en: "Niseko Annupuri", name_zh: null, name_ja: null, region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 3, metadata: {} },
+  { id: "5", slug: "rusutsu-west-mt", name_en: "Rusutsu West Mt.", name_zh: null, name_ja: null, region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 4, metadata: {} },
+  { id: "6", slug: "rusutsu-east-mt", name_en: "Rusutsu East Mt.", name_zh: null, name_ja: null, region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 5, metadata: {} },
+  { id: "7", slug: "kiroro", name_en: "Kiroro", name_zh: null, name_ja: null, region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 6, metadata: {} },
+  { id: "8", slug: "sapporo-kokusai", name_en: "Sapporo Kokusai", name_zh: null, name_ja: null, region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 7, metadata: {} },
+  { id: "9", slug: "sapporo-teine", name_en: "Sapporo Teine", name_zh: null, name_ja: null, region_id: null, description_en: null, description_zh: null, description_ja: null, is_active: true, display_order: 8, metadata: {} },
 ];
 
 export const DEFAULT_LANGUAGES: Language[] = [

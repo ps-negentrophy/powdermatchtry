@@ -63,6 +63,8 @@ export interface Instructor {
   avatar_url: string | null;
   is_verified: boolean;
   is_active: boolean;
+  certification_body?: string | null;
+  certification_number?: string | null;
 }
 
 export interface ResolvedNameItem {

@@ -42,6 +42,43 @@ function RoleCard({
   );
 }
 
+// ── Helpers ───────────────────────────────────────────────────────────────────
+
+const BIRTH_YEARS = Array.from({ length: 86 }, (_, i) => 2025 - i); // 2025 → 1940
+
+const INSTRUCTOR_QUALIFICATIONS = [
+  "Japan SIA",
+  "Argentina AADIDE",
+  "Australia APSI",
+  "Austria OSSV",
+  "Canada CSIA / CASI / PSIC",
+  "Chile ENISCHAG",
+  "Czech APUL",
+  "Denmark DAPSI",
+  "France SNMSF",
+  "Germany",
+  "Great Britain BASI",
+  "Ireland IASI",
+  "Italy AMSI",
+  "Netherlands NVVS",
+  "New Zealand NZSIA / SBINZ",
+  "Norway DNS",
+  "Poland SITN",
+  "South Korea KSIA",
+  "Spain AEPEDI",
+  "Sweden SLAOS",
+  "Switzerland SSS",
+  "USA PSIA-AASI",
+  "Other",
+];
+
+function getMonthNames(locale: string): string[] {
+  const intlLocale = locale === "zh" ? "zh-CN" : locale === "ja" ? "ja-JP" : "en-US";
+  return Array.from({ length: 12 }, (_, i) =>
+    new Intl.DateTimeFormat(intlLocale, { month: "long" }).format(new Date(2000, i, 1))
+  );
+}
+
 // ── Step 2: Account creation form ────────────────────────────────────────────
 
 function SignupForm({ role, onBack }: { role: Role; onBack: () => void }) {
@@ -53,6 +90,11 @@ function SignupForm({ role, onBack }: { role: Role; onBack: () => void }) {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [gender, setGender] = useState("");
+  const [birthYear, setBirthYear] = useState("");
+  const [birthMonth, setBirthMonth] = useState("");
+  const [certificationBody, setCertificationBody] = useState("");
+  const [certificationNumber, setCertificationNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -75,7 +117,17 @@ function SignupForm({ role, onBack }: { role: Role; onBack: () => void }) {
         email,
         password,
         options: {
-          data: { role, display_name: displayName },
+          data: {
+            role,
+            display_name: displayName,
+            gender: gender || null,
+            birth_year: birthYear ? Number(birthYear) : null,
+            birth_month: birthMonth ? Number(birthMonth) : null,
+            ...(role === "instructor" && {
+              certification_body: certificationBody || null,
+              certification_number: certificationNumber.trim() || null,
+            }),
+          },
           emailRedirectTo: baseUrl
             ? `${baseUrl}/auth/callback?next=${encodeURIComponent(nextPath)}`
             : undefined,
@@ -141,20 +193,7 @@ function SignupForm({ role, onBack }: { role: Role; onBack: () => void }) {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="displayName" className="mb-1 block text-sm font-medium text-slate-700">
-              {t("displayName")}
-            </label>
-            <input
-              id="displayName"
-              type="text"
-              value={displayName}
-              onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-powder-400"
-              required
-              autoComplete="name"
-            />
-          </div>
+          {/* Email */}
           <div>
             <label htmlFor="email" className="mb-1 block text-sm font-medium text-slate-700">
               {t("email")}
@@ -169,6 +208,8 @@ function SignupForm({ role, onBack }: { role: Role; onBack: () => void }) {
               autoComplete="email"
             />
           </div>
+
+          {/* Password */}
           <div>
             <label htmlFor="password" className="mb-1 block text-sm font-medium text-slate-700">
               {t("password")}
@@ -186,11 +227,129 @@ function SignupForm({ role, onBack }: { role: Role; onBack: () => void }) {
             <p className="mt-1 text-xs text-slate-400">{t("passwordHint")}</p>
           </div>
 
+          {/* Your name */}
+          <div>
+            <label htmlFor="displayName" className="mb-1 block text-sm font-medium text-slate-700">
+              {t("displayName")}
+            </label>
+            <input
+              id="displayName"
+              type="text"
+              value={displayName}
+              onChange={(e) => setDisplayName(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-powder-400"
+              required
+              autoComplete="name"
+            />
+          </div>
+
+          {/* Gender */}
+          <div>
+            <label htmlFor="gender" className="mb-1 block text-sm font-medium text-slate-700">
+              {t("gender")}
+            </label>
+            <select
+              id="gender"
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              required
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-powder-400"
+            >
+              <option value="">{t("genderPlaceholder")}</option>
+              <option value="male">{t("genderMale")}</option>
+              <option value="female">{t("genderFemale")}</option>
+            </select>
+          </div>
+
+          {/* Birth year + month */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label htmlFor="birthYear" className="mb-1 block text-sm font-medium text-slate-700">
+                {t("birthYear")}
+              </label>
+              <select
+                id="birthYear"
+                value={birthYear}
+                onChange={(e) => setBirthYear(e.target.value)}
+                required
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-powder-400"
+              >
+                <option value="">{t("birthYearPlaceholder")}</option>
+                {BIRTH_YEARS.map((y) => (
+                  <option key={y} value={y}>{y}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="birthMonth" className="mb-1 block text-sm font-medium text-slate-700">
+                {t("birthMonth")}
+              </label>
+              <select
+                id="birthMonth"
+                value={birthMonth}
+                onChange={(e) => setBirthMonth(e.target.value)}
+                required
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-powder-400"
+              >
+                <option value="">{t("birthMonthPlaceholder")}</option>
+                {getMonthNames(locale).map((name, idx) => (
+                  <option key={idx + 1} value={idx + 1}>{name}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Instructor-only: qualifications */}
+          {role === "instructor" && (
+            <>
+              <div>
+                <label htmlFor="certificationBody" className="mb-1 block text-sm font-medium text-slate-700">
+                  {t("qualificationAssociation")}
+                </label>
+                <select
+                  id="certificationBody"
+                  value={certificationBody}
+                  onChange={(e) => setCertificationBody(e.target.value)}
+                  required
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-powder-400"
+                >
+                  <option value="">{t("qualificationAssociationPlaceholder")}</option>
+                  {INSTRUCTOR_QUALIFICATIONS.map((q) => (
+                    <option key={q} value={q}>{q}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label htmlFor="certificationNumber" className="mb-1 block text-sm font-medium text-slate-700">
+                  {t("qualificationNumber")}
+                </label>
+                <input
+                  id="certificationNumber"
+                  type="text"
+                  value={certificationNumber}
+                  onChange={(e) => setCertificationNumber(e.target.value)}
+                  placeholder={t("qualificationNumberPlaceholder")}
+                  required
+                  className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-powder-400"
+                />
+              </div>
+            </>
+          )}
+
           {error && <p className="text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
-            disabled={loading || !displayName || !email || !password}
+            disabled={
+              loading ||
+              !email ||
+              !password ||
+              !displayName ||
+              !gender ||
+              !birthYear ||
+              !birthMonth ||
+              (role === "instructor" && (!certificationBody || !certificationNumber.trim()))
+            }
             className="w-full rounded-lg bg-powder-500 py-2.5 text-sm font-semibold text-white hover:bg-powder-600 disabled:opacity-50"
           >
             {loading ? "..." : t("submit")}

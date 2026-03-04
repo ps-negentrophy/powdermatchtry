@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { supabase } from "@/lib/supabase";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { ResolvedAvailabilitySlot, ResolvedNameItem } from "@/types/database";
 
 function parseIds(param: string | null): string[] {
@@ -23,6 +23,7 @@ async function fetchResolvedSlots(
 ): Promise<Map<string, ResolvedAvailabilitySlot[]>> {
   if (instructorIds.length === 0) return new Map();
 
+  const supabase = createAdminClient();
   const today = new Date().toISOString().slice(0, 10);
 
   let slotQuery = supabase
@@ -116,13 +117,20 @@ export async function GET(request: NextRequest) {
     skillLevelIds.length || improvementAreaIds.length
   );
 
+  const supabase = createAdminClient();
+
   try {
     let filteredInstructorIds: string[] | null = null;
     let matchedSlotIds: string[] | null = null; // track which specific slots matched
+    let slotData: { id: string; instructor_id: string }[] | null = null;
 
     if (hasDateFilter || hasConditionFilter) {
+      const today = new Date().toISOString().slice(0, 10);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let slotQuery: any = supabase.from("availability_slots").select("id, instructor_id");
+      let slotQuery: any = supabase
+        .from("availability_slots")
+        .select("id, instructor_id")
+        .gte("end_date", today); // Exclude past/legacy slots
 
       // Date containment: the student's full date range must fall inside the instructor's slot.
       if (hasDateFilter) {
@@ -156,20 +164,20 @@ export async function GET(request: NextRequest) {
           : slotQuery.overlaps("improvement_area_ids", improvementAreaIds);
       }
 
-      const { data: slotData } = await slotQuery;
-      matchedSlotIds = (slotData ?? []).map((s: { id: string }) => s.id);
-      filteredInstructorIds = [
-        ...new Set((slotData ?? []).map((s: { instructor_id: string }) => s.instructor_id)),
-      ];
+      const { data: slots } = await slotQuery;
+      slotData = slots ?? [];
+      matchedSlotIds = slotData.map((s) => s.id);
+      filteredInstructorIds = [...new Set(slotData.map((s) => s.instructor_id))];
 
       if (filteredInstructorIds.length === 0) return NextResponse.json([]);
     }
 
-    // Fetch instructor profiles
+    // Fetch instructor profiles (explicitly include certification for InstructorCard)
     let query = supabase
       .from("instructors")
       .select(`
-        *,
+        id, display_name, bio_en, bio_zh, bio_ja, avatar_url, is_verified, is_active,
+        certification_body, certification_number,
         resorts:instructor_resorts(resorts(*)),
         languages:instructor_languages(languages(*)),
         skill_levels:instructor_skill_levels(skill_levels(*)),
@@ -195,9 +203,16 @@ export async function GET(request: NextRequest) {
       availability_slots: [] as ResolvedAvailabilitySlot[],
     }));
 
+    // Only include slots whose instructor still exists (exclude orphaned slots from deleted instructors)
+    const existingInstructorIds = new Set(normalized.map((i) => i.id as string));
+    const slotIdsToFetch =
+      matchedSlotIds !== null && slotData !== null
+        ? slotData.filter((s) => existingInstructorIds.has(s.instructor_id)).map((s) => s.id)
+        : matchedSlotIds;
+
     // Attach only the matched slots (or all upcoming slots when no filter was applied)
     const instructorIds = normalized.map((i) => i.id as string);
-    const slotsByInstructor = await fetchResolvedSlots(instructorIds, matchedSlotIds);
+    const slotsByInstructor = await fetchResolvedSlots(instructorIds, slotIdsToFetch);
     for (const inst of normalized) {
       inst.availability_slots = slotsByInstructor.get(inst.id) ?? [];
     }
