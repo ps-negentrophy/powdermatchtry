@@ -61,6 +61,7 @@
     "kiroro": "キロロ"
   },
   "auth": {
+    "loginChooseRole": "ログイン方法を選択",
     "studentLogin": "生徒ログイン",
     "instructorLogin": "インストラクターログイン",
     "email": "メールアドレス",

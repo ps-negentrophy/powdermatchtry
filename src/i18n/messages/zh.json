@@ -61,6 +61,7 @@
     "kiroro": "喜乐乐"
   },
   "auth": {
+    "loginChooseRole": "选择登录身份",
     "studentLogin": "学员登录",
     "instructorLogin": "教练登录",
     "email": "邮箱",

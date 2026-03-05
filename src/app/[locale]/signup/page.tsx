@@ -160,10 +160,10 @@ function SignupForm({ role, onBack }: { role: Role; onBack: () => void }) {
         <h2 className="text-2xl font-bold text-slate-900">{t("success")}</h2>
         <div className="flex justify-center gap-4 pt-2">
           <Link
-            href={role === "student" ? "/login/student" : "/login/instructor"}
+            href="/login"
             className="rounded-lg bg-powder-500 px-5 py-2 text-sm font-medium text-white hover:bg-powder-600"
           >
-            {role === "student" ? t("loginStudent") : t("loginInstructor")}
+            {tAuth("login")}
           </Link>
         </div>
       </div>
@@ -359,10 +359,10 @@ function SignupForm({ role, onBack }: { role: Role; onBack: () => void }) {
         <p className="mt-5 text-center text-sm text-slate-500">
           {t("hasAccount")}{" "}
           <Link
-            href={role === "student" ? "/login/student" : "/login/instructor"}
+            href="/login"
             className="font-medium text-powder-600 hover:underline"
           >
-            {role === "student" ? t("loginStudent") : t("loginInstructor")}
+            {tAuth("login")}
           </Link>
         </p>
       </div>

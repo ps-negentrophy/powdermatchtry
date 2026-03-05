@@ -61,6 +61,7 @@
     "kiroro": "Kiroro"
   },
   "auth": {
+    "loginChooseRole": "Log in as",
     "studentLogin": "Student Login",
     "instructorLogin": "Instructor Login",
     "email": "Email",

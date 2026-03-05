@@ -31,12 +31,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="max-w-3xl mx-auto">
-        <h2 className="text-2xl font-semibold mb-6">{tWorks("title")}</h2>
-        <ol className="space-y-4 list-decimal list-inside text-slate-600">
-          <li>{tWorks("step1")}</li>
-          <li>{tWorks("step2")}</li>
-          <li>{tWorks("step3")}</li>
+      <section>
+        <h2 className="text-sm font-semibold text-slate-900 mb-3">{tWorks("title")}</h2>
+        <ol className="flex flex-col gap-2 text-sm text-slate-600">
+          <li className="flex items-start gap-2"><span className="font-semibold text-powder-500 shrink-0">1.</span>{tWorks("step1")}</li>
+          <li className="flex items-start gap-2"><span className="font-semibold text-powder-500 shrink-0">2.</span>{tWorks("step2")}</li>
+          <li className="flex items-start gap-2"><span className="font-semibold text-powder-500 shrink-0">3.</span>{tWorks("step3")}</li>
         </ol>
       </section>
     </div>

@@ -51,13 +51,13 @@ export function AuthSection() {
       <div className="flex items-center gap-4">
         <Link
           href={myPageHref}
-          className="text-slate-600 hover:text-slate-900 transition-colors text-base"
+          className="text-slate-600 hover:text-slate-900 transition-colors text-sm"
         >
           {myPageLabel}
         </Link>
         <button
           onClick={handleLogout}
-          className="text-slate-600 hover:text-slate-900 transition-colors text-base"
+          className="text-slate-600 hover:text-slate-900 transition-colors text-sm"
         >
           {t("logout")}
         </button>
@@ -68,16 +68,10 @@ export function AuthSection() {
   return (
     <div className="flex items-center gap-3">
       <Link
-        href="/login/student"
+        href="/login"
         className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
       >
-        {t("studentLogin")}
-      </Link>
-      <Link
-        href="/login/instructor"
-        className="text-sm text-slate-600 hover:text-slate-900 transition-colors"
-      >
-        {t("instructorLogin")}
+        {t("login")}
       </Link>
       <Link
         href="/signup"
