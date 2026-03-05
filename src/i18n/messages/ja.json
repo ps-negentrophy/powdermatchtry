@@ -48,7 +48,8 @@
     "clearDates": "日程をクリア",
     "clearConditions": "条件をクリア",
     "apply": "検索",
-    "clear": "クリア"
+    "clear": "クリア",
+    "eligibleLessons": "予約可能なレッスン"
   },
   "skillLevels": {
     "beginner": "初級",

@@ -48,7 +48,8 @@
     "clearDates": "清除日期",
     "clearConditions": "清除条件",
     "apply": "应用筛选",
-    "clear": "清除"
+    "clear": "清除",
+    "eligibleLessons": "可预约课程"
   },
   "skillLevels": {
     "beginner": "入门",

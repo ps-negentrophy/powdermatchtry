@@ -48,7 +48,8 @@
     "clearDates": "Clear dates",
     "clearConditions": "Clear conditions",
     "apply": "Apply Filters",
-    "clear": "Clear"
+    "clear": "Clear",
+    "eligibleLessons": "Eligible Lessons"
   },
   "skillLevels": {
     "beginner": "Beginner",

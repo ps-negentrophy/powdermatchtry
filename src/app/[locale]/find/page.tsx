@@ -285,7 +285,7 @@ export default function FindInstructorPage() {
         onFiltersChange={setFilters}
       />
       <section>
-        <h2 className="text-xl font-semibold text-slate-900 mb-4">Eligible Lessons</h2>
+        <h2 className="text-xl font-semibold text-slate-900 mb-4">{t("eligibleLessons")}</h2>
         {loading ? (
           <p className="text-slate-500">Loading...</p>
         ) : displayedCards.length === 0 ? (

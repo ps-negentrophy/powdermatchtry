@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { usePathname } from "@/i18n/navigation";
 import { useRouter } from "next/navigation";
@@ -16,6 +16,7 @@ export function Header() {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations("nav");
 
   const switchLocale = (newLocale: string) => {
     return `/${newLocale}${pathname}`;
@@ -26,7 +27,7 @@ export function Header() {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         <Link href="/" className="flex flex-col items-start gap-0.5">
           <span className="text-base font-bold text-slate-800">Powder Match</span>
-          <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">
+          <span className="rounded-full bg-orange-500 px-2 py-0.5 text-xs font-semibold text-white">
             (BETA)
           </span>
         </Link>
@@ -49,7 +50,7 @@ export function Header() {
             href="/find"
             className="text-slate-600 hover:text-slate-900 transition-colors"
           >
-            Find Instructor
+            {t("findInstructor")}
           </Link>
           <AuthSection />
         </nav>
