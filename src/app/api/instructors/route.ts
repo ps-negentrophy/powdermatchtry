@@ -165,9 +165,10 @@ export async function GET(request: NextRequest) {
       }
 
       const { data: slots } = await slotQuery;
-      slotData = slots ?? [];
-      matchedSlotIds = slotData.map((s) => s.id);
-      filteredInstructorIds = [...new Set(slotData.map((s) => s.instructor_id))];
+      const slotRows = slots ?? [];
+      slotData = slotRows;
+      matchedSlotIds = slotRows.map((s: { id: string; instructor_id: string }) => s.id);
+      filteredInstructorIds = [...new Set(slotRows.map((s: { id: string; instructor_id: string }) => s.instructor_id))] as string[];
 
       if (filteredInstructorIds.length === 0) return NextResponse.json([]);
     }

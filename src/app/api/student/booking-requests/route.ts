@@ -31,12 +31,20 @@ export async function GET(request: NextRequest) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   if (!bookings || bookings.length === 0) return NextResponse.json([]);
 
+  type BookingRow = {
+    id: string; instructor_id: string; requested_date: string; end_date?: string | null;
+    message?: string | null; status: string; created_at: string; responded_at?: string | null; completed_at?: string | null;
+    instructors?: { display_name: string } | null;
+    booked_discipline_ids?: string[]; booked_resort_ids?: string[]; booked_language_ids?: string[]; booked_skill_level_ids?: string[]; booked_improvement_area_ids?: string[];
+  };
+  const rows = bookings as unknown as BookingRow[];
+
   // Batch-resolve condition names for all bookings
-  const dIds  = [...new Set(bookings.flatMap((b) => b.booked_discipline_ids ?? []))];
-  const rIds  = [...new Set(bookings.flatMap((b) => b.booked_resort_ids ?? []))];
-  const lIds  = [...new Set(bookings.flatMap((b) => b.booked_language_ids ?? []))];
-  const slIds = [...new Set(bookings.flatMap((b) => b.booked_skill_level_ids ?? []))];
-  const iIds  = [...new Set(bookings.flatMap((b) => b.booked_improvement_area_ids ?? []))];
+  const dIds  = [...new Set(rows.flatMap((b) => b.booked_discipline_ids ?? []))];
+  const rIds  = [...new Set(rows.flatMap((b) => b.booked_resort_ids ?? []))];
+  const lIds  = [...new Set(rows.flatMap((b) => b.booked_language_ids ?? []))];
+  const slIds = [...new Set(rows.flatMap((b) => b.booked_skill_level_ids ?? []))];
+  const iIds  = [...new Set(rows.flatMap((b) => b.booked_improvement_area_ids ?? []))];
 
   const [disciplines, resorts, languages, skillLevels, improvementAreas] = await Promise.all([
     dIds.length  ? supabase.from("disciplines").select(nameSelect).in("id", dIds).then((r) => (r.data ?? []) as ResolvedNameItem[])         : Promise.resolve([] as ResolvedNameItem[]),
@@ -52,7 +60,7 @@ export async function GET(request: NextRequest) {
   const slMap = buildMap(skillLevels);
   const iMap  = buildMap(improvementAreas);
 
-  const result = (bookings ?? []).map((b) => {
+  const result = rows.map((b) => {
     const instructorData = b.instructors as { display_name: string } | null;
 
     const hasConditions =

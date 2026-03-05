@@ -53,11 +53,11 @@ export async function GET() {
 
   const enriched = slots.map((slot) => ({
     ...slot,
-    resolved_disciplines: (slot.discipline_ids ?? []).map((id) => disciplineMap.get(id)).filter(Boolean),
-    resolved_resorts: (slot.resort_ids ?? []).map((id) => resortMap.get(id)).filter(Boolean),
-    resolved_languages: (slot.language_ids ?? []).map((id) => languageMap.get(id)).filter(Boolean),
-    resolved_skill_levels: (slot.skill_level_ids ?? []).map((id) => skillLevelMap.get(id)).filter(Boolean),
-    resolved_improvement_areas: (slot.improvement_area_ids ?? []).map((id) => improvementAreaMap.get(id)).filter(Boolean),
+    resolved_disciplines: (slot.discipline_ids ?? []).map((id: string) => disciplineMap.get(id)).filter(Boolean),
+    resolved_resorts: (slot.resort_ids ?? []).map((id: string) => resortMap.get(id)).filter(Boolean),
+    resolved_languages: (slot.language_ids ?? []).map((id: string) => languageMap.get(id)).filter(Boolean),
+    resolved_skill_levels: (slot.skill_level_ids ?? []).map((id: string) => skillLevelMap.get(id)).filter(Boolean),
+    resolved_improvement_areas: (slot.improvement_area_ids ?? []).map((id: string) => improvementAreaMap.get(id)).filter(Boolean),
   }));
 
   return NextResponse.json(enriched);
