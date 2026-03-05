@@ -38,11 +38,11 @@ export function Footer() {
             hello@placeholder.com
           </a>
           <a
-            href="tel:+85212345678"
+            href="tel:+817012345678"
             className="flex items-center gap-2 hover:text-slate-900 transition-colors"
           >
             <PhoneIcon className="h-4 w-4 shrink-0" />
-            +852-1234-5678
+            +81-70-1234-5678
           </a>
           <span className="flex items-center gap-2">
             <MapPinIcon className="h-4 w-4 shrink-0" />

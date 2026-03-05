@@ -22,17 +22,12 @@ export default async function HomePage() {
           <p className="text-xl text-slate-700 max-w-2xl mx-auto drop-shadow-sm">
             {t("subtitle")}
           </p>
-          <div className="flex flex-col items-center gap-2">
-            <Link
-              href="/find"
-              className="inline-block px-8 py-4 bg-powder-500 text-white font-semibold rounded-lg hover:bg-powder-600 transition-colors shadow-md"
-            >
-              {t("cta")}
-            </Link>
-            <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">
-              (BETA)
-            </span>
-          </div>
+          <Link
+            href="/find"
+            className="inline-block px-8 py-4 bg-powder-500 text-white font-semibold rounded-lg hover:bg-powder-600 transition-colors shadow-md"
+          >
+            {t("cta")}
+          </Link>
         </div>
       </section>
 

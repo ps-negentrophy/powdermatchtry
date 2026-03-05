@@ -69,6 +69,7 @@ function formatDate(dateStr: string): string {
 
 export function InstructorProfileSection({ reloadTrigger = 0 }: { reloadTrigger?: number }) {
   const t = useTranslations("user.instructor.profile");
+  const tFilters = useTranslations("filters");
   const locale = useLocale();
 
   const [resorts, setResorts] = useState<Resort[]>(DEFAULT_RESORTS);
@@ -204,7 +205,7 @@ export function InstructorProfileSection({ reloadTrigger = 0 }: { reloadTrigger?
         {/* Date range */}
         <div>
           <p className="mb-2 text-xs font-medium text-slate-600">{t("dateRange")}</p>
-          <div className="flex flex-wrap items-end gap-4">
+          <div className="flex flex-wrap items-end gap-3">
             <div className="flex flex-col gap-1">
               <label className="text-xs text-slate-500">{t("startDate")}</label>
               <input
@@ -228,6 +229,13 @@ export function InstructorProfileSection({ reloadTrigger = 0 }: { reloadTrigger?
                 className="rounded border border-slate-300 px-3 py-2 text-sm"
               />
             </div>
+            <button
+              type="button"
+              onClick={() => { setStartDate(""); setEndDate(""); }}
+              className="text-xs text-slate-400 hover:text-red-500 shrink-0"
+            >
+              {tFilters("clearDates")}
+            </button>
           </div>
         </div>
 
@@ -237,15 +245,26 @@ export function InstructorProfileSection({ reloadTrigger = 0 }: { reloadTrigger?
           {loadingOptions ? (
             <p className="text-sm text-slate-500">{t("loadingOptions")}</p>
           ) : (
-            <InstructorConditionsForm
-              resorts={resorts}
-              languages={languages}
-              skillLevels={skillLevels}
-              improvementAreas={improvementAreas}
-              disciplines={disciplines}
-              conditions={conditions}
-              onChange={setConditions}
-            />
+            <div className="flex flex-wrap items-end gap-3">
+              <div className="flex-1 min-w-0">
+                <InstructorConditionsForm
+                  resorts={resorts}
+                  languages={languages}
+                  skillLevels={skillLevels}
+                  improvementAreas={improvementAreas}
+                  disciplines={disciplines}
+                  conditions={conditions}
+                  onChange={setConditions}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setConditions(EMPTY_CONDITIONS)}
+                className="text-xs text-slate-400 hover:text-red-500 shrink-0"
+              >
+                {tFilters("clearConditions")}
+              </button>
+            </div>
           )}
         </div>
 

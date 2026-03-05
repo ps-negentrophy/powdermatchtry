@@ -24,8 +24,11 @@ export function Header() {
   return (
     <header className="border-b bg-white sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="text-base font-bold text-slate-800">
-          Powder Match
+        <Link href="/" className="flex flex-col items-start gap-0.5">
+          <span className="text-base font-bold text-slate-800">Powder Match</span>
+          <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">
+            (BETA)
+          </span>
         </Link>
         <nav className="flex items-center gap-6 text-sm">
           {/* Language dropdown */}
