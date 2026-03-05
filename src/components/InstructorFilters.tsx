@@ -92,15 +92,13 @@ export function InstructorFilters({
               className="rounded border border-slate-300 px-3 py-2 text-sm"
             />
           </div>
-          {(filters.startDate || filters.endDate) && (
-            <button
-              type="button"
-              onClick={() => update({ startDate: undefined, endDate: undefined })}
-              className="text-xs text-slate-400 hover:text-red-500"
-            >
-              {t("clearDates")}
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => update({ startDate: undefined, endDate: undefined })}
+            className="text-xs text-slate-400 hover:text-red-500"
+          >
+            {t("clearDates")}
+          </button>
         </div>
       </div>
 
@@ -108,7 +106,8 @@ export function InstructorFilters({
       <div>
         <p className="mb-2 text-sm font-medium text-slate-700">{t("lessonConditions")}</p>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="flex flex-wrap items-end gap-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5 flex-1 min-w-0">
         <MultiSelectFilter
           label={t("discipline")}
           options={disciplines}
@@ -169,6 +168,27 @@ export function InstructorFilters({
           orAny={t("orAny")}
           onSelectionChange={(ids, op) => update({ improvementAreaIds: ids, improvementAreaOperator: op })}
         />
+        </div>
+        <button
+          type="button"
+          onClick={() =>
+            update({
+              disciplineIds: [],
+              disciplineOperator: "or",
+              resortIds: [],
+              resortOperator: "or",
+              languageIds: [],
+              languageOperator: "or",
+              skillLevelIds: [],
+              skillLevelOperator: "or",
+              improvementAreaIds: [],
+              improvementAreaOperator: "or",
+            })
+          }
+          className="text-xs text-slate-400 hover:text-red-500 shrink-0"
+        >
+          {t("clearConditions")}
+        </button>
       </div>
     </div>
   );

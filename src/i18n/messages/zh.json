@@ -46,6 +46,7 @@
     "fromDate": "从",
     "toDate": "至",
     "clearDates": "清除日期",
+    "clearConditions": "清除条件",
     "apply": "应用筛选",
     "clear": "清除"
   },
@@ -198,9 +199,10 @@
       "markComplete": "标记完成",
       "pendingRequests": "预订请求",
       "acceptedBookings": "已接受的预订",
+      "declinedBookings": "已拒绝的预订",
       "completedBookings": "已完成预订",
       "profile": {
-        "title": "授课安排",
+        "title": "授课可预约时段",
         "subtitle": "按时间段添加您的空闲安排，每段包含日期范围和该期间能教的内容，可添加多段。",
         "addAvailability": "添加空闲时段",
         "dateRange": "课程日期",
@@ -209,7 +211,7 @@
         "whatITeach": "课程条件",
         "saveSlot": "保存此时段",
         "saveError": "保存失败，请重试。",
-        "savedSlots": "已保存的空闲时段",
+        "savedSlots": "您在市场上发布的可用时段",
         "noSlots": "尚未添加任何空闲时段。",
         "noConditions": "未指定条件。",
         "deleteSlot": "删除",

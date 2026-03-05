@@ -46,6 +46,7 @@
     "fromDate": "開始",
     "toDate": "終了",
     "clearDates": "日程をクリア",
+    "clearConditions": "条件をクリア",
     "apply": "検索",
     "clear": "クリア"
   },
@@ -198,9 +199,10 @@
       "markComplete": "完了にする",
       "pendingRequests": "予約リクエスト",
       "acceptedBookings": "承認済み予約",
+      "declinedBookings": "辞退済み予約",
       "completedBookings": "完了済み予約",
       "profile": {
-        "title": "レッスンスケジュール",
+        "title": "レッスン空き枠",
         "subtitle": "空き期間ごとに、対応可能な日程と内容を登録してください。複数追加できます。",
         "addAvailability": "空き枠を追加",
         "dateRange": "レッスン日程",
@@ -209,7 +211,7 @@
         "whatITeach": "レッスン条件",
         "saveSlot": "この空き枠を保存",
         "saveError": "保存に失敗しました。もう一度お試しください。",
-        "savedSlots": "登録済みの空き枠",
+        "savedSlots": "マーケットプレイスに掲載した空き枠",
         "noSlots": "まだ空き枠が登録されていません。",
         "noConditions": "条件が指定されていません。",
         "deleteSlot": "削除",

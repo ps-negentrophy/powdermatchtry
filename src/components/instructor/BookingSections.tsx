@@ -49,6 +49,10 @@ export function BookingSections({ onBookingAccepted }: { onBookingAccepted?: () 
         <BookingRequestsSection status="accepted" onComplete={completeRequest} />
       </section>
       <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="mb-4 text-xl font-semibold text-slate-900">{t("declinedBookings")}</h2>
+        <BookingRequestsSection status="declined" />
+      </section>
+      <section className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="mb-4 text-xl font-semibold text-slate-900">{t("completedBookings")}</h2>
         <BookingRequestsSection status="completed" />
       </section>

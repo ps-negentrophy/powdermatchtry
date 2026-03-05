@@ -46,6 +46,7 @@
     "fromDate": "From",
     "toDate": "To",
     "clearDates": "Clear dates",
+    "clearConditions": "Clear conditions",
     "apply": "Apply Filters",
     "clear": "Clear"
   },
@@ -198,9 +199,10 @@
       "markComplete": "Mark Complete",
       "pendingRequests": "Booking Requests",
       "acceptedBookings": "Accepted Bookings",
+      "declinedBookings": "Declined Bookings",
       "completedBookings": "Completed Bookings",
       "profile": {
-        "title": "Teaching Schedule",
+        "title": "Teaching availabilities",
         "subtitle": "Add availability blocks — each one covers a date range and specifies what you can teach on those dates.",
         "addAvailability": "New availability",
         "dateRange": "Lesson dates",
@@ -209,7 +211,7 @@
         "whatITeach": "Lesson conditions",
         "saveSlot": "Save availability",
         "saveError": "Failed to save. Please try again.",
-        "savedSlots": "Your availabilities",
+        "savedSlots": "Your availabilities posted on the marketplace",
         "noSlots": "No availabilities saved yet.",
         "noConditions": "No conditions specified.",
         "deleteSlot": "Delete",

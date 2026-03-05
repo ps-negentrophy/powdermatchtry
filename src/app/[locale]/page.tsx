@@ -6,7 +6,7 @@ export default async function HomePage() {
   const tWorks = await getTranslations("home.howItWorks");
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-8">
       <section
         className="relative min-h-[70vh] flex flex-col items-center justify-center text-center px-4 overflow-hidden rounded-2xl"
         style={{
@@ -22,18 +22,23 @@ export default async function HomePage() {
           <p className="text-xl text-slate-700 max-w-2xl mx-auto drop-shadow-sm">
             {t("subtitle")}
           </p>
-          <Link
-            href="/find"
-            className="inline-block px-8 py-4 bg-powder-500 text-white font-semibold rounded-lg hover:bg-powder-600 transition-colors shadow-md"
-          >
-            {t("cta")}
-          </Link>
+          <div className="flex flex-col items-center gap-2">
+            <Link
+              href="/find"
+              className="inline-block px-8 py-4 bg-powder-500 text-white font-semibold rounded-lg hover:bg-powder-600 transition-colors shadow-md"
+            >
+              {t("cta")}
+            </Link>
+            <span className="rounded-full bg-red-500 px-2 py-0.5 text-xs font-semibold text-white">
+              (BETA)
+            </span>
+          </div>
         </div>
       </section>
 
-      <section>
-        <h2 className="text-sm font-semibold text-slate-900 mb-3">{tWorks("title")}</h2>
-        <ol className="flex flex-col gap-2 text-sm text-slate-600">
+      <section className="flex flex-col gap-3">
+        <h2 className="text-sm font-semibold text-slate-900">{tWorks("title")}</h2>
+        <ol className="flex flex-col gap-3 text-sm text-slate-600">
           <li className="flex items-start gap-2"><span className="font-semibold text-powder-500 shrink-0">1.</span>{tWorks("step1")}</li>
           <li className="flex items-start gap-2"><span className="font-semibold text-powder-500 shrink-0">2.</span>{tWorks("step2")}</li>
           <li className="flex items-start gap-2"><span className="font-semibold text-powder-500 shrink-0">3.</span>{tWorks("step3")}</li>

@@ -54,7 +54,7 @@ function conditionExpandedTags(conditions: SlotConditions, locale: string): stri
 }
 
 export function BookingRequestsSection({ status, onAccept, onDecline, onComplete }: {
-  status: "pending" | "accepted" | "completed";
+  status: "pending" | "accepted" | "declined" | "completed";
   onAccept?: (id: string) => void;
   onDecline?: (id: string) => void;
   onComplete?: (id: string) => void;
