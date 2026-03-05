@@ -28,7 +28,7 @@ export function Header() {
           Powder Match
         </Link>
         <nav className="flex items-center gap-6 text-sm">
-          {/* Language dropdown — before Home */}
+          {/* Language dropdown */}
           <select
             value={locale}
             onChange={(e) => router.push(switchLocale(e.target.value))}
@@ -42,12 +42,6 @@ export function Header() {
             ))}
           </select>
 
-          <Link
-            href="/"
-            className="text-slate-600 hover:text-slate-900 transition-colors"
-          >
-            Home
-          </Link>
           <Link
             href="/find"
             className="text-slate-600 hover:text-slate-900 transition-colors"
